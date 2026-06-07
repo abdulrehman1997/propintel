@@ -23,7 +23,9 @@ function toApiFilters({ q, minPrice, maxPrice, beds }) {
 export default function SearchPage() {
   const [filters, setFilters] = useState({ q: "" });
   const { listings, loading } = useListings(toApiFilters(filters));
-  const { add } = useCompare();
+  const { items, add, remove } = useCompare();
+  const isSelected = (id) => items.some((i) => i.id === id);
+  const toggleCompare = (l) => (isSelected(l.id) ? remove(l.id) : add(l));
 
   return (
     <main className="max-w-[1240px] mx-auto px-6 md:px-10 py-10 space-y-8">
@@ -41,7 +43,12 @@ export default function SearchPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {listings.map((l) => (
-            <ListingCard key={l.id} listing={l} onCompare={add} />
+            <ListingCard
+              key={l.id}
+              listing={l}
+              onCompare={toggleCompare}
+              selected={isSelected(l.id)}
+            />
           ))}
         </div>
       )}

@@ -3,10 +3,20 @@ import Link from "next/link";
 import { cn } from "../../lib/cn";
 import { formatCurrency } from "../../lib/format";
 
-export function ListingCard({ listing: l, onCompare }) {
+export function ListingCard({ listing: l, onCompare, selected = false }) {
   return (
-    <div className="card-shell p-2">
-      <div className="card-core overflow-hidden">
+    <div
+      className={cn(
+        "card-shell p-2 transition-shadow",
+        selected && "ring-2 ring-forest-500 rounded-[inherit]",
+      )}
+    >
+      <div className="card-core overflow-hidden relative">
+        {selected && (
+          <span className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-forest-700 text-paper-50 text-xs flex items-center justify-center shadow-soft">
+            ✓
+          </span>
+        )}
         <div className="relative">
           {l.photo_url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -55,9 +65,15 @@ export function ListingCard({ listing: l, onCompare }) {
             <button
               type="button"
               onClick={() => onCompare(l)}
-              className="text-[11px] font-semibold uppercase tracking-[0.14em] border border-paper-200 hover:border-forest-300 rounded-full px-4 py-2.5"
+              aria-pressed={selected}
+              className={cn(
+                "text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-4 py-2.5 border transition-colors",
+                selected
+                  ? "bg-forest-700 text-paper-50 border-forest-700 hover:bg-forest-800"
+                  : "border-paper-200 hover:border-forest-300",
+              )}
             >
-              + Compare
+              {selected ? "✓ In Compare" : "+ Compare"}
             </button>
           </div>
         </div>

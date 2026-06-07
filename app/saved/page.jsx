@@ -5,7 +5,10 @@ import { useCompare } from "../lib/compare-store";
 
 export default function SavedPage() {
   const { saved, remove } = useSavedListings();
-  const { add } = useCompare();
+  const { items, add, remove: removeCompare } = useCompare();
+  const isSelected = (id) => items.some((i) => i.id === id);
+  const toggleCompare = (l) =>
+    isSelected(l.id) ? removeCompare(l.id) : add(l);
 
   if (saved.length === 0) {
     return (
@@ -35,7 +38,11 @@ export default function SavedPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {saved.map((listing) => (
           <div key={listing.id} className="relative">
-            <ListingCard listing={listing} onCompare={add} />
+            <ListingCard
+              listing={listing}
+              onCompare={toggleCompare}
+              selected={isSelected(listing.id)}
+            />
             <button
               type="button"
               onClick={() => remove(listing.id)}
