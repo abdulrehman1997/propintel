@@ -1,0 +1,91 @@
+PropIntel v2 — Product Requirements Document (PRD)
+Course: ISEM 564 | Date: 2026-06-06
+
+================================================================
+1. PRODUCT
+================================================================
+Professional Real Estate Investment Analyzer for residential AND
+commercial properties. Computes pro-grade financial metrics in real
+time, grounded in how institutional/"mogul" investors underwrite.
+Backed by a local real-data platform (Postgres in Docker fed by a
+scheduled updater pulling free public APIs). Includes side-by-side
+property comparison and real charting.
+
+Local demo only (Docker + npm). No auth, no hosting, no AI runtime.
+
+================================================================
+2. USERS
+================================================================
+- Real estate investor evaluating a single deal (residential or commercial).
+- Investor comparing 2-4 candidate deals side by side.
+- Course evaluator viewing a polished, credible analysis tool.
+
+================================================================
+3. CORE MVP (must exist first)
+================================================================
+M1. Analysis engine split into pure modules: finance / residential /
+    commercial / scoring / constants. Immutable, unit-tested.
+M2. Commercial mode (FULL): per-unit (multifamily 5+) and per-SF
+    (retail/office/industrial); NNN/gross/modified-gross leases;
+    going-in & exit cap; OER; debt sizing MIN(LTV,DSCR,debt-yield)
+    with binding-constraint label; levered/unlevered IRR; equity multiple.
+M3. Residential mode extended: user-driven appreciation, IRR, equity
+    multiple, stress tests (existing metrics retained).
+M4. Composite deal score + hard red-flag gates + stress-test battery
+    (no single metric decides).
+M5. Postgres in Docker (docker-compose) + schema (markets,
+    rent_benchmarks, economic_indicators, refresh_log).
+M6. Updater service: pulls Census ACS, HUD FMR, FRED, BLS, Zillow
+    research CSVs; idempotent upserts; node-cron schedule + one-shot
+    seed; per-source graceful failure; refresh_log.
+M7. /api/neighborhood rewired Postgres-first (fixes current 500 on
+    missing keys; seeded data always present).
+M8. Frontend Residential/Commercial toggle swapping inputs + results.
+M9. Side-by-side comparison: 2-4 properties, ranked, winner highlight.
+M10. Recharts: projection lines, sensitivity heatmap, score breakdown.
+M11. localStorage saved deals (save/load/delete).
+M12. zod input validation at form boundary.
+
+================================================================
+4. FEATURES BEYOND MVP (stretch)
+================================================================
+- BRRRR / refinance module (research spec already covers math).
+- Exportable PDF deal report.
+- Map view of markets.
+- Configurable reserve treatment (above/below NOI).
+
+================================================================
+5. INTEGRATIONS / EXTERNAL SERVICES
+================================================================
+Free public APIs only: US Census ACS, HUD FMR, FRED, BLS, Zillow
+research CSVs. OpenStreetMap Nominatim for geocoding (existing).
+Postgres (Docker). No paid APIs. No scraping. No third-party auth.
+
+================================================================
+6. DEFINITION OF DONE
+================================================================
+- docker compose up brings Postgres up healthy.
+- npm run seed populates real data; app shows neighborhood data with
+  NO API keys required at runtime.
+- Residential and Commercial modes both produce correct metrics
+  matching worked examples in the research specs.
+- Side-by-side compare ranks 2-4 deals.
+- Charts render correctly at 320 / 768 / 1440.
+- Engine unit tests pass, 80%+ coverage on lib/.
+- Runs end to end locally for a class demo.
+
+================================================================
+7. CONSTRAINTS
+================================================================
+- Local only, ~3 day runway (vibe-coded full scope).
+- Stack: Next 16, React 19, Tailwind, framer-motion, lucide.
+  Adds: pg, recharts, node-cron, zod, vitest.
+- Immutable data patterns; many small files (<800 lines); pure engine.
+- Methodology source of truth:
+  docs/underwriting-methodology-spec.md (residential)
+  docs/cre-underwriting-spec.md (commercial)
+
+================================================================
+8. BUILD ORDER
+================================================================
+1) Analysis engine  2) Data platform  3) Frontend

@@ -1,0 +1,7 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/geocode/route": "app/api/geocode/route.js",
+  "/api/neighborhood/route": "app/api/neighborhood/route.js",
+  "/page": "app/page.js"
+}
