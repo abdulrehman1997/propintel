@@ -19,6 +19,7 @@ export const SavedDealsPanel = ({ deals, onSave, onLoad, onDelete }) => {
       <div className="flex gap-2">
         <input
           type="text"
+          aria-label="Name this deal"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name this deal…"

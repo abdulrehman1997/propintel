@@ -301,6 +301,7 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                 <div className="flex gap-2">
                   <input
                     type="text"
+                    aria-label="ZIP code"
                     placeholder="ZIP code"
                     maxLength={5}
                     value={residentialInputs.zipCode}
@@ -404,6 +405,7 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                       <SensitivityHeatmap
                         baseInputs={residentialInputs}
                         compute={residentialSensitivityCompute}
+                        baseCapRate={results?.capRate}
                         label="Levered IRR"
                       />
                     </div>
@@ -443,16 +445,45 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                           <h3 className="font-display text-xl font-medium text-ink-900">{[neighborhoodData.location?.city, neighborhoodData.location?.state].filter(Boolean).join(', ')}</h3>
                           <p className="text-ink-400 text-sm">{neighborhoodData.location?.zip}</p>
                         </div>
-                        <div className={cn('px-5 py-2.5 rounded-2xl font-display text-3xl font-light', Math.round(neighborhoodData.neighborhoodScore) >= 65 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800')}>
-                          {Math.round(neighborhoodData.neighborhoodScore)}
-                        </div>
+                        {(() => {
+                          const c = neighborhoodData.census || {};
+                          const fmr = neighborhoodData.fmr || {};
+                          // The score defaults every sub-score to 50 when its input is
+                          // null, so a "50" can appear with zero real data behind it.
+                          // Only present a numeric score when at least one metric (incl.
+                          // an FMR rent fallback) actually has data; otherwise show "—".
+                          const hasData =
+                            c.medianIncome != null || c.vacancyRate != null ||
+                            c.unemploymentRate != null || c.medianRent != null ||
+                            fmr.twoBed != null || fmr.oneBed != null || fmr.studio != null;
+                          if (!hasData) {
+                            return (
+                              <div className="px-5 py-2.5 rounded-2xl font-display text-3xl font-light bg-paper-100 text-ink-400" title="No neighborhood data available for this ZIP">
+                                —
+                              </div>
+                            );
+                          }
+                          const score = Math.round(neighborhoodData.neighborhoodScore);
+                          return (
+                            <div className={cn('px-5 py-2.5 rounded-2xl font-display text-3xl font-light', score >= 65 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800')}>
+                              {score}
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {[
                           ['Median Income', neighborhoodData.census?.medianIncome != null ? formatCurrency(neighborhoodData.census.medianIncome) : 'N/A'],
                           ['Vacancy Rate', neighborhoodData.census?.vacancyRate != null ? `${neighborhoodData.census.vacancyRate.toFixed(1)}%` : 'N/A'],
                           ['Unemployment', neighborhoodData.census?.unemploymentRate != null ? `${neighborhoodData.census.unemploymentRate.toFixed(1)}%` : 'N/A'],
-                          ['Median Rent', neighborhoodData.census?.medianRent != null ? formatCurrency(neighborhoodData.census.medianRent) : 'N/A'],
+                          // Median Rent: prefer Census median rent; fall back to HUD FMR
+                          // (2BR, then 1BR, then studio) so seeded rent data is surfaced.
+                          ['Median Rent', (() => {
+                            const c = neighborhoodData.census || {};
+                            const fmr = neighborhoodData.fmr || {};
+                            const rent = c.medianRent ?? fmr.twoBed ?? fmr.oneBed ?? fmr.studio;
+                            return rent != null ? formatCurrency(rent) : 'N/A';
+                          })()],
                         ].map(([label, val]) => (
                           <div key={label} className="bg-paper-50 border border-paper-200 rounded-2xl p-4">
                             <p className="text-ink-400 uppercase tracking-[0.14em] text-[10px] font-semibold mb-1.5">{label}</p>

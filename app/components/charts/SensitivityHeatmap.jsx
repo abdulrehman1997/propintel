@@ -6,20 +6,30 @@ const RATE_DELTAS = [-1, -0.5, 0, 0.5, 1];
 // Cap deltas (cols): −100bps to +100bps in 50bps steps
 const CAP_DELTAS = [-1, -0.5, 0, 0.5, 1];
 
-// Default exit cap used when the deal has no explicit one. The engine treats a
-// 0/unset exit cap as "fall back to appreciated value", which would make every
-// exit-cap column collapse to the same number. Centring the sweep on a real,
-// positive cap keeps the horizontal axis meaningful.
+// Last-resort exit cap when neither the deal's inputs nor its computed cap rate
+// are available. The engine treats a 0/unset exit cap as "fall back to
+// appreciated value", which would make every exit-cap column collapse to the
+// same number, so the sweep must be centred on a real, positive cap.
 const DEFAULT_EXIT_CAP = 6;
 
-const baseExitCap = (baseInputs) => {
-  const candidates = [baseInputs.exitCapRate, baseInputs.goingInCapRate, baseInputs.capRate];
+// Center the exit-cap sweep on the DEAL'S OWN cap rate. The residential default
+// deal sets exitCapRate:0 and has no goingInCapRate/capRate input, so without the
+// computed `baseCapRate` (NOI/price, passed by the caller) the sweep would land
+// on the hardcoded default — far from the deal's true cap — flooring terminal
+// value below the loan balance and collapsing every IRR cell to 0.
+const baseExitCap = (baseInputs, baseCapRate) => {
+  const candidates = [
+    baseInputs.exitCapRate,
+    baseInputs.goingInCapRate,
+    baseInputs.capRate,
+    baseCapRate,
+  ];
   const positive = candidates.find((c) => Number(c) > 0);
   return positive != null ? Number(positive) : DEFAULT_EXIT_CAP;
 };
 
-export function buildSensitivityGrid({ baseInputs, compute }) {
-  const exitCapBase = baseExitCap(baseInputs);
+export function buildSensitivityGrid({ baseInputs, compute, baseCapRate }) {
+  const exitCapBase = baseExitCap(baseInputs, baseCapRate);
   return RATE_DELTAS.map((rd) => ({
     rateDelta: rd,
     cells: CAP_DELTAS.map((cd) => {
@@ -41,8 +51,8 @@ const cellColor = (value, min, max) => {
   return 'bg-rose-100 text-rose-800';
 };
 
-export const SensitivityHeatmap = ({ baseInputs, compute, label = 'Levered IRR' }) => {
-  const grid = buildSensitivityGrid({ baseInputs, compute });
+export const SensitivityHeatmap = ({ baseInputs, compute, label = 'Levered IRR', baseCapRate }) => {
+  const grid = buildSensitivityGrid({ baseInputs, compute, baseCapRate });
   const allValues = grid.flatMap((r) => r.cells.map((c) => c.value));
   const min = Math.min(...allValues);
   const max = Math.max(...allValues);

@@ -28,13 +28,18 @@ describe('analyzeCommercial income stack', () => {
     expect(r.pricePerUnit).toBeCloseTo(250000, 0);   // 25M / 100
     expect(r.pricePerSF).toBeCloseTo(250, 6);        // 25M / 100000
   });
-  it('reproduces the WSP debt sizing: LTV binds at $17.5M when NOI=$2.0M, value=$25M', () => {
+  it('reproduces the WSP debt sizing: LTV binds at $17.5M (70% of the $25M PRICE, not implied value)', () => {
     const r = analyzeCommercial({
       ...mf, opexAnnual: 0, vacancyPct: 0,
       units: [{ count: 100, marketRent: 1700, inPlaceRent: 1700 }],
     });
     expect(r.debt.bindingConstraint).toBeDefined();
-    expect(r.debt.loanLTV).toBeCloseTo(0.70 * r.value, -2);
+    // The Max-LTV cap must be measured against the actual purchase price
+    // ($25,000,000), NOT the income-implied value (NOI/cap = $25,500,000 here).
+    // 70% * $25M = $17.5M. Anchoring to implied value would float the cap with
+    // the assumed cap rate and can size loans above the price (>100% LTV).
+    expect(r.debt.loanLTV).toBeCloseTo(0.70 * 25_000_000, -2);
+    expect(r.debt.loanLTV).toBeCloseTo(17_500_000, -2);
   });
   it('NNN lease lowers OER via expense recovery', () => {
     const gross = analyzeCommercial({ ...mf, leaseType: 'gross', recoveryRatio: 0, opexAnnual: 400000 });
