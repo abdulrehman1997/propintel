@@ -1,5 +1,0 @@
-{
-  "/api/geocode/route": "app/api/geocode/route.js",
-  "/api/neighborhood/route": "app/api/neighborhood/route.js",
-  "/page": "app/page.js"
-}

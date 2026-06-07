@@ -20,6 +20,10 @@ next-env.d.ts
 # Test coverage
 coverage/
 
+# Playwright CLI snapshots / scratch
+.playwright-cli/
+scratch-*
+
 # Env
 .env
 .env*.local
