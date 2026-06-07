@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { monthlyPayment, annualDebtService, mortgageConstant, loanBalance, npv, irr, dscr, debtYield } from '../lib/finance.js';
+import { monthlyPayment, annualDebtService, mortgageConstant, loanBalance, npv, irr, dscr, debtYield, sizeMaxLoan, terminalValue, netSaleProceeds, equityMultiple } from '../lib/finance.js';
 
 describe('amortization primitives', () => {
   it('computes monthly P&I for a 30yr fixed', () => {
@@ -49,5 +49,40 @@ describe('lender ratios', () => {
   it('guards divide-by-zero with 0', () => {
     expect(dscr(120000, 0)).toBe(0);
     expect(debtYield(120000, 0)).toBe(0);
+  });
+});
+
+describe('debt sizing (WSP example)', () => {
+  // NOI $2.0M, cap 8% => value $25M; maxLTV 70%, minDY 8%, minDSCR 1.25, rate 6.5%, amort 25yr
+  const args = {
+    noi: 2_000_000, value: 25_000_000,
+    maxLTV: 0.70, minDebtYield: 0.08, minDSCR: 1.25,
+    rate: 0.065, amortYears: 25,
+  };
+  it('Loan_LTV = 17.5M, Loan_DY = 25M, Loan_DSCR ~ 19.75M, MIN = 17.5M (LTV binds)', () => {
+    const r = sizeMaxLoan(args);
+    expect(r.loanLTV).toBeCloseTo(17_500_000, -2);
+    expect(r.loanDebtYield).toBeCloseTo(25_000_000, -2);
+    expect(r.loanDSCR).toBeCloseTo(19_750_000, -4);
+    expect(r.maxLoan).toBeCloseTo(17_500_000, -2);
+    expect(r.bindingConstraint).toBe('LTV');
+  });
+  it('debt yield binds in a high-rate / low-cap scenario', () => {
+    const r = sizeMaxLoan({ ...args, minDebtYield: 0.12 });
+    expect(r.maxLoan).toBeCloseTo(16_666_667, -2); // 2M / 0.12
+    expect(r.bindingConstraint).toBe('DebtYield');
+  });
+});
+
+describe('exit and equity', () => {
+  it('terminalValue = forward NOI / exit cap', () => {
+    expect(terminalValue(2_100_000, 0.085)).toBeCloseTo(24_705_882, -2);
+  });
+  it('netSaleProceeds = value*(1-saleCost) - loanBalance', () => {
+    expect(netSaleProceeds(24_705_882, 0.02, 16_000_000))
+      .toBeCloseTo(24_705_882 * 0.98 - 16_000_000, 0);
+  });
+  it('equityMultiple = total distributions / equity invested', () => {
+    expect(equityMultiple([50000, 50000, 50000, 600000], 350000)).toBeCloseTo(2.142857, 5);
   });
 });
