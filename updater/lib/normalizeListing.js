@@ -23,6 +23,15 @@ const toNum = (v) => {
   return Number.isFinite(n) ? n : null;
 };
 
+// The Realtor.com dataset's `street` is an anonymized numeric id (e.g.
+// "263302.0"), not a readable address. Keep real street names; drop
+// numeric-only/empty values to null so the UI falls back to city/zip.
+const cleanStreet = (v) => {
+  const s = (v || "").trim();
+  if (!s || /^\d+(\.\d+)?$/.test(s)) return null;
+  return s;
+};
+
 export function normalizeListing(row) {
   const status = (row.status || "").trim().toLowerCase();
   if (status !== "for_sale") return null;
@@ -41,7 +50,7 @@ export function normalizeListing(row) {
   return {
     source: "KAGGLE_REALTOR",
     status: "for_sale",
-    street: (row.street || "").trim() || null,
+    street: cleanStreet(row.street),
     city: (row.city || "").trim() || null,
     state,
     zip,

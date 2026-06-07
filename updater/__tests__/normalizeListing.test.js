@@ -39,6 +39,14 @@ describe("normalizeListing", () => {
     expect(normalizeListing({ ...row, zip_code: "1701" }).zip).toBe("01701");
   });
 
+  it("nulls numeric/empty street ids but keeps real street names", () => {
+    expect(normalizeListing({ ...row, street: "263302.0" }).street).toBeNull();
+    expect(normalizeListing({ ...row, street: "  " }).street).toBeNull();
+    expect(normalizeListing({ ...row, street: "412 Mulberry St" }).street).toBe(
+      "412 Mulberry St",
+    );
+  });
+
   it("returns null when required fields are missing or out of scope", () => {
     expect(normalizeListing({ ...row, price: "" })).toBeNull();
     expect(normalizeListing({ ...row, zip_code: "" })).toBeNull();

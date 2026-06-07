@@ -14,7 +14,9 @@ export function ListingCard({ listing: l, onCompare }) {
             {formatCurrency(l.price)}
           </p>
           <p className="text-sm text-ink-600">
-            {l.street}, {l.city}, {l.state} {l.zip}
+            {[l.street, `${l.city}, ${l.state} ${l.zip}`]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
           <p className="text-xs text-ink-400">
             {l.beds} bd &middot; {l.baths ?? "—"} ba &middot;{" "}

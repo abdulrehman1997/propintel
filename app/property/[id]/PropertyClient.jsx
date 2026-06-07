@@ -19,13 +19,19 @@ export function PropertyClient({ listing, fmr, neighborhood }) {
       <header className="flex flex-wrap items-start gap-3">
         <div className="flex-1 min-w-0">
           <h1 className="font-display text-2xl font-medium text-ink-900">
-            {listing.street}
+            {listing.street || `${listing.city}, ${listing.state}`}
           </h1>
           <p className="text-ink-500">
-            {listing.city}, {listing.state} {listing.zip} &middot;{" "}
-            {formatCurrency(listing.price)} &middot; {listing.beds} bd &middot;{" "}
-            {listing.baths ?? "—"} ba &middot;{" "}
-            {listing.sqft ? `${listing.sqft} sqft` : "— sqft"}
+            {[
+              listing.street ? `${listing.city}, ${listing.state}` : null,
+              listing.zip,
+              formatCurrency(listing.price),
+              `${listing.beds} bd`,
+              `${listing.baths ?? "—"} ba`,
+              listing.sqft ? `${listing.sqft} sqft` : "— sqft",
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </div>
         <button
