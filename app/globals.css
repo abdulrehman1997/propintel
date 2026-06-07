@@ -42,10 +42,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  /* Prevent a rogue child (e.g. the results tab strip on narrow viewports)
+     from forcing horizontal page scroll; the tab strip scrolls internally. */
+  overflow-x: hidden;
   background-color: var(--color-paper);
   color: var(--color-ink);
 }

@@ -400,11 +400,11 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                   </div>
                   {mode === 'residential' && (
                     <div>
-                      <h4 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-400 mb-5">Cash-on-Cash Sensitivity (Rate × Exit Cap)</h4>
+                      <h4 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-400 mb-5">Levered IRR Sensitivity (Rate × Exit Cap)</h4>
                       <SensitivityHeatmap
                         baseInputs={residentialInputs}
                         compute={residentialSensitivityCompute}
-                        label="CoC Return"
+                        label="Levered IRR"
                       />
                     </div>
                   )}
@@ -440,7 +440,7 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                     <div className="space-y-6">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h3 className="font-display text-xl font-medium text-ink-900">{neighborhoodData.location?.city}, {neighborhoodData.location?.state}</h3>
+                          <h3 className="font-display text-xl font-medium text-ink-900">{[neighborhoodData.location?.city, neighborhoodData.location?.state].filter(Boolean).join(', ')}</h3>
                           <p className="text-ink-400 text-sm">{neighborhoodData.location?.zip}</p>
                         </div>
                         <div className={cn('px-5 py-2.5 rounded-2xl font-display text-3xl font-light', Math.round(neighborhoodData.neighborhoodScore) >= 65 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800')}>
@@ -449,10 +449,10 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          ['Median Income', formatCurrency(neighborhoodData.census?.medianIncome)],
-                          ['Vacancy Rate', `${neighborhoodData.census?.vacancyRate?.toFixed(1)}%`],
-                          ['Unemployment', `${neighborhoodData.census?.unemploymentRate?.toFixed(1)}%`],
-                          ['Median Rent', formatCurrency(neighborhoodData.census?.medianRent)],
+                          ['Median Income', neighborhoodData.census?.medianIncome != null ? formatCurrency(neighborhoodData.census.medianIncome) : 'N/A'],
+                          ['Vacancy Rate', neighborhoodData.census?.vacancyRate != null ? `${neighborhoodData.census.vacancyRate.toFixed(1)}%` : 'N/A'],
+                          ['Unemployment', neighborhoodData.census?.unemploymentRate != null ? `${neighborhoodData.census.unemploymentRate.toFixed(1)}%` : 'N/A'],
+                          ['Median Rent', neighborhoodData.census?.medianRent != null ? formatCurrency(neighborhoodData.census.medianRent) : 'N/A'],
                         ].map(([label, val]) => (
                           <div key={label} className="bg-paper-50 border border-paper-200 rounded-2xl p-4">
                             <p className="text-ink-400 uppercase tracking-[0.14em] text-[10px] font-semibold mb-1.5">{label}</p>

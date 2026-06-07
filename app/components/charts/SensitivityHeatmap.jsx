@@ -6,14 +6,27 @@ const RATE_DELTAS = [-1, -0.5, 0, 0.5, 1];
 // Cap deltas (cols): −100bps to +100bps in 50bps steps
 const CAP_DELTAS = [-1, -0.5, 0, 0.5, 1];
 
+// Default exit cap used when the deal has no explicit one. The engine treats a
+// 0/unset exit cap as "fall back to appreciated value", which would make every
+// exit-cap column collapse to the same number. Centring the sweep on a real,
+// positive cap keeps the horizontal axis meaningful.
+const DEFAULT_EXIT_CAP = 6;
+
+const baseExitCap = (baseInputs) => {
+  const candidates = [baseInputs.exitCapRate, baseInputs.goingInCapRate, baseInputs.capRate];
+  const positive = candidates.find((c) => Number(c) > 0);
+  return positive != null ? Number(positive) : DEFAULT_EXIT_CAP;
+};
+
 export function buildSensitivityGrid({ baseInputs, compute }) {
+  const exitCapBase = baseExitCap(baseInputs);
   return RATE_DELTAS.map((rd) => ({
     rateDelta: rd,
     cells: CAP_DELTAS.map((cd) => {
       const inputs = {
         ...baseInputs,
         interestRate: (baseInputs.interestRate ?? 0) + rd,
-        exitCapRate: (baseInputs.exitCapRate ?? baseInputs.goingInCapRate ?? 5) + cd,
+        exitCapRate: exitCapBase + cd,
       };
       return { capDelta: cd, value: compute(inputs) };
     }),
@@ -28,7 +41,7 @@ const cellColor = (value, min, max) => {
   return 'bg-rose-100 text-rose-800';
 };
 
-export const SensitivityHeatmap = ({ baseInputs, compute, label = 'CoC Return' }) => {
+export const SensitivityHeatmap = ({ baseInputs, compute, label = 'Levered IRR' }) => {
   const grid = buildSensitivityGrid({ baseInputs, compute });
   const allValues = grid.flatMap((r) => r.cells.map((c) => c.value));
   const min = Math.min(...allValues);

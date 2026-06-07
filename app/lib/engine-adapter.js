@@ -308,13 +308,19 @@ export const residentialStressTests = (inputs) => {
 };
 
 /**
- * Cash-on-Cash compute fn for the SensitivityHeatmap (Rate × Exit Cap grid).
- * Returns CoC as a percentage number.
+ * Levered-IRR compute fn for the SensitivityHeatmap (Rate × Exit Cap grid).
+ * IRR depends on BOTH the interest rate (rows, via debt service) and the exit
+ * cap rate (cols, via terminal sale value), so both axes are meaningful — unlike
+ * year-1 cash-on-cash, which ignores the exit cap entirely. Returns IRR as a
+ * percentage number; null IRRs (no sign change in cash flows) render as 0.
  */
 export const residentialSensitivityCompute = (inp) => {
   const eIn = toResidentialEngineInput(inp);
   const r = analyzeResidential(eIn);
-  return +(r.cashOnCash * 100).toFixed(2);
+  // r.irr is already expressed as a percentage (see pct() at top of file).
+  const leveredIrr = r.irr;
+  if (leveredIrr == null || Number.isNaN(leveredIrr)) return 0;
+  return +leveredIrr.toFixed(2);
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
