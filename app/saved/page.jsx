@@ -5,7 +5,7 @@ import { useCompare } from "../lib/compare-store";
 
 export default function SavedPage() {
   const { saved, remove } = useSavedListings();
-  const { toggle } = useCompare();
+  const { add } = useCompare();
 
   if (saved.length === 0) {
     return (
@@ -35,7 +35,7 @@ export default function SavedPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {saved.map((listing) => (
           <div key={listing.id} className="relative">
-            <ListingCard listing={listing} onCompare={toggle} />
+            <ListingCard listing={listing} onCompare={add} />
             <button
               type="button"
               onClick={() => remove(listing.id)}
