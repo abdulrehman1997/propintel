@@ -1,8 +1,47 @@
-import { NextResponse } from 'next/server';
-import { getNeighborhoodFromDb } from '../../../lib/db/neighborhoodRepo.js';
+import { NextResponse } from "next/server";
+import { getNeighborhoodFromDb } from "../../../lib/db/neighborhoodRepo.js";
 
 const cache = new Map();
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+// Graceful-degradation payload: a fully-shaped neighborhood object with every
+// metric nulled out. Returned (HTTP 200) when no data source is reachable —
+// Postgres is unseeded AND the live APIs can't run (keys missing) or the ZIP
+// can't be resolved. The UI already renders null census/fmr fields as "—" / "N/A"
+// and shows a "—" score when no real metric is present, so a 200 with this shape
+// degrades cleanly instead of erroring the whole neighborhood panel.
+function emptyNeighborhood(zip, message) {
+  return {
+    location: { city: null, state: null, zip, stateCode: null },
+    census: {
+      medianIncome: null,
+      medianRent: null,
+      medianHomeValue: null,
+      population: null,
+      renterUnits: null,
+      occupiedUnits: null,
+      vacantUnits: null,
+      totalUnits: null,
+      unemployed: null,
+      laborForce: null,
+      renterRate: null,
+      vacancyRate: null,
+      unemploymentRate: null,
+      priceToRentRatio: null,
+    },
+    fmr: { isSafmr: false },
+    neighborhoodScore: null,
+    scoreBreakdown: {
+      incomeScore: null,
+      vacancyScore: null,
+      unemploymentScore: null,
+      priceToRentScore: null,
+    },
+    dataAsOf: null,
+    source: "unavailable",
+    message,
+  };
+}
 
 // ─── Live API fallback ────────────────────────────────────────────────────────
 
@@ -12,20 +51,20 @@ async function fetchLive(zip) {
 
   if (!CENSUS_API_KEY || !HUD_API_TOKEN) {
     return {
-      error: 'API keys missing',
-      details: 'Set up CENSUS_API_KEY and HUD_API_TOKEN in .env.local',
+      error: "API keys missing",
+      details: "Set up CENSUS_API_KEY and HUD_API_TOKEN in .env.local",
     };
   }
 
   // 1. Geocode to get state code
   const geoResponse = await fetch(
     `https://nominatim.openstreetmap.org/search?postalcode=${zip}&country=US&format=json&addressdetails=1&limit=1`,
-    { headers: { 'User-Agent': 'PropIntel/1.0' } },
+    { headers: { "User-Agent": "PropIntel/1.0" } },
   );
   const geoData = await geoResponse.json();
-  if (!geoData || geoData.length === 0) throw new Error('Location not found');
+  if (!geoData || geoData.length === 0) throw new Error("Location not found");
 
-  const stateCode = geoData[0].address['ISO3166-2-lvl4']?.split('-')[1] || '';
+  const stateCode = geoData[0].address["ISO3166-2-lvl4"]?.split("-")[1] || "";
 
   // 2. Fetch county entity ID from HUD
   let entityId = null;
@@ -36,16 +75,18 @@ async function fetchLive(zip) {
     );
     if (countiesRes.ok) {
       const counties = await countiesRes.json();
-      const countyName = geoData[0].address.county?.replace(' County', '');
+      const countyName = geoData[0].address.county?.replace(" County", "");
       const match = counties.find(
         (c) =>
           c.county_name.includes(countyName) ||
-          c.fips_code.startsWith(geoData[0].address['ISO3166-2-lvl4']?.split('-')[1]),
+          c.fips_code.startsWith(
+            geoData[0].address["ISO3166-2-lvl4"]?.split("-")[1],
+          ),
       );
       if (match) entityId = match.fips_code;
     }
   } catch (e) {
-    console.error('HUD County List Error:', e);
+    console.error("HUD County List Error:", e);
   }
 
   // 3. Parallel Census + HUD calls
@@ -62,11 +103,11 @@ async function fetchLive(zip) {
     fetch(censusUrl),
     hudUrl
       ? fetch(hudUrl, { headers: { Authorization: `Bearer ${HUD_API_TOKEN}` } })
-      : Promise.reject('No Entity ID'),
+      : Promise.reject("No Entity ID"),
   ]);
 
   let censusData = null;
-  if (censusRes.status === 'fulfilled') {
+  if (censusRes.status === "fulfilled") {
     const response = censusRes.value;
     if (response.ok) {
       const clonedRes = response.clone();
@@ -90,15 +131,15 @@ async function fetchLive(zip) {
         }
       } catch (e) {
         const text = await clonedRes.text();
-        if (text.includes('invalid_key')) {
-          console.error('Census API key not yet active');
+        if (text.includes("invalid_key")) {
+          console.error("Census API key not yet active");
         }
       }
     }
   }
 
   let fmrData = { isSafmr: false };
-  if (hudRes.status === 'fulfilled') {
+  if (hudRes.status === "fulfilled") {
     const response = hudRes.value;
     if (response.ok) {
       try {
@@ -106,45 +147,70 @@ async function fetchLive(zip) {
         const basicdata = hudJson.data?.basicdata;
         if (basicdata) {
           const zipRow = basicdata.find((r) => r.zip_code === zip);
-          const msaRow = basicdata.find((r) => r.zip_code === 'MSA level');
+          const msaRow = basicdata.find((r) => r.zip_code === "MSA level");
           const source = zipRow || msaRow;
           if (source) {
             fmrData = {
-              studio: source['Efficiency'],
-              oneBed: source['One-Bedroom'],
-              twoBed: source['Two-Bedroom'],
-              threeBed: source['Three-Bedroom'],
-              fourBed: source['Four-Bedroom'],
+              studio: source["Efficiency"],
+              oneBed: source["One-Bedroom"],
+              twoBed: source["Two-Bedroom"],
+              threeBed: source["Three-Bedroom"],
+              fourBed: source["Four-Bedroom"],
               isSafmr: !!zipRow,
             };
           }
         }
       } catch (e) {
-        console.error('HUD JSON Parse Error:', e);
+        console.error("HUD JSON Parse Error:", e);
       }
     }
   }
 
   const cd = censusData || {
-    medianIncome: null, medianRent: null, medianHomeValue: null,
-    population: null, renterUnits: null, occupiedUnits: null,
-    vacantUnits: null, totalUnits: null, unemployed: null, laborForce: null,
+    medianIncome: null,
+    medianRent: null,
+    medianHomeValue: null,
+    population: null,
+    renterUnits: null,
+    occupiedUnits: null,
+    vacantUnits: null,
+    totalUnits: null,
+    unemployed: null,
+    laborForce: null,
   };
 
-  const renterRate = cd.occupiedUnits ? (cd.renterUnits / cd.occupiedUnits) * 100 : null;
-  const vacancyRate = cd.totalUnits ? (cd.vacantUnits / cd.totalUnits) * 100 : null;
-  const unemploymentRate = cd.laborForce ? (cd.unemployed / cd.laborForce) * 100 : null;
+  const renterRate = cd.occupiedUnits
+    ? (cd.renterUnits / cd.occupiedUnits) * 100
+    : null;
+  const vacancyRate = cd.totalUnits
+    ? (cd.vacantUnits / cd.totalUnits) * 100
+    : null;
+  const unemploymentRate = cd.laborForce
+    ? (cd.unemployed / cd.laborForce) * 100
+    : null;
   const priceToRentRatio =
-    cd.medianRent && cd.medianHomeValue ? cd.medianHomeValue / (cd.medianRent * 12) : null;
+    cd.medianRent && cd.medianHomeValue
+      ? cd.medianHomeValue / (cd.medianRent * 12)
+      : null;
 
   const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
-  const incomeScore = cd.medianIncome ? clamp((cd.medianIncome - 40000) / 600, 0, 100) : 50;
-  const vacancyScore = vacancyRate !== null ? clamp(100 - vacancyRate * 6, 0, 100) : 50;
-  const unemploymentScore = unemploymentRate !== null ? clamp(100 - unemploymentRate * 10, 0, 100) : 50;
-  const p2rScore = priceToRentRatio !== null ? clamp(100 - (priceToRentRatio - 10) * 3.5, 10, 100) : 50;
+  const incomeScore = cd.medianIncome
+    ? clamp((cd.medianIncome - 40000) / 600, 0, 100)
+    : 50;
+  const vacancyScore =
+    vacancyRate !== null ? clamp(100 - vacancyRate * 6, 0, 100) : 50;
+  const unemploymentScore =
+    unemploymentRate !== null ? clamp(100 - unemploymentRate * 10, 0, 100) : 50;
+  const p2rScore =
+    priceToRentRatio !== null
+      ? clamp(100 - (priceToRentRatio - 10) * 3.5, 10, 100)
+      : 50;
 
   const neighborhoodScore = Math.round(
-    incomeScore * 0.35 + vacancyScore * 0.25 + unemploymentScore * 0.2 + p2rScore * 0.2,
+    incomeScore * 0.35 +
+      vacancyScore * 0.25 +
+      unemploymentScore * 0.2 +
+      p2rScore * 0.2,
   );
 
   return {
@@ -154,17 +220,28 @@ async function fetchLive(zip) {
         geoData[0].address.city_district ||
         geoData[0].address.city ||
         geoData[0].address.town ||
-        geoData[0].display_name.split(',')[0],
+        geoData[0].display_name.split(",")[0],
       state: geoData[0].address.state,
       zip,
       stateCode,
     },
-    census: { ...cd, renterRate, vacancyRate, unemploymentRate, priceToRentRatio },
+    census: {
+      ...cd,
+      renterRate,
+      vacancyRate,
+      unemploymentRate,
+      priceToRentRatio,
+    },
     fmr: fmrData,
     neighborhoodScore,
-    scoreBreakdown: { incomeScore, vacancyScore, unemploymentScore, priceToRentScore: p2rScore },
+    scoreBreakdown: {
+      incomeScore,
+      vacancyScore,
+      unemploymentScore,
+      priceToRentScore: p2rScore,
+    },
     dataAsOf: null,
-    source: 'live',
+    source: "live",
   };
 }
 
@@ -172,10 +249,10 @@ async function fetchLive(zip) {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const zip = searchParams.get('zip');
+  const zip = searchParams.get("zip");
 
   if (!zip || zip.length !== 5) {
-    return NextResponse.json({ error: 'Invalid zip code' }, { status: 400 });
+    return NextResponse.json({ error: "Invalid zip code" }, { status: 400 });
   }
 
   // In-memory cache check (works for both postgres and live results)
@@ -190,15 +267,24 @@ export async function GET(request) {
     try {
       result = await getNeighborhoodFromDb(zip);
     } catch (dbErr) {
-      console.error('Postgres read error (falling back to live):', dbErr.message);
+      console.error(
+        "Postgres read error (falling back to live):",
+        dbErr.message,
+      );
     }
 
     // 2. Fall back to live APIs on cache miss
     if (!result) {
       const liveResult = await fetchLive(zip);
-      // fetchLive returns an error shape (no location key) when keys are missing
+      // fetchLive returns an error shape (no location key) when keys are missing.
+      // Neighborhood data is supplementary context, not core underwriting, so a
+      // missing-keys state degrades to an empty 200 payload (UI shows "—" / "N/A")
+      // rather than a 500 that breaks the whole panel. Don't cache the degraded
+      // shape — keys/seed may appear later in the same process.
       if (liveResult.error) {
-        return NextResponse.json(liveResult, { status: 500 });
+        return NextResponse.json(
+          emptyNeighborhood(zip, liveResult.details || liveResult.error),
+        );
       }
       result = liveResult;
     }
@@ -206,7 +292,12 @@ export async function GET(request) {
     cache.set(zip, { data: result, timestamp: Date.now() });
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Neighborhood API error:', error);
-    return NextResponse.json({ error: 'Failed to fetch neighborhood intelligence' }, { status: 500 });
+    // Unexpected failures (geocode miss, network error, upstream API down) also
+    // degrade gracefully: the neighborhood panel renders "data unavailable"
+    // instead of surfacing a hard error over the entire analysis.
+    console.error("Neighborhood API error:", error);
+    return NextResponse.json(
+      emptyNeighborhood(zip, "Neighborhood data is temporarily unavailable."),
+    );
   }
 }
