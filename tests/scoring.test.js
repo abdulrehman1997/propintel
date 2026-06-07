@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compositeScore, redFlagGates } from '../lib/scoring.js';
+import { compositeScore, redFlagGates, stressTests } from '../lib/scoring.js';
 
 const strong = { cashOnCash: 0.12, dscr: 1.5, irr: 0.18, equityMultiple: 2.2,
   capRate: 0.07, grm: 7, marketGrade: 'A', breakEvenOccupancy: 0.65, debtYield: 0.12, ageFactor: 0.9 };
@@ -61,5 +61,38 @@ describe('redFlagGates', () => {
       cashOnCash: 0.1, hasAppreciationThesis: true,
       debtYield: 0.12, exitCapRate: 0.06, goingInCapRate: 0.05,
     })).toEqual([]);
+  });
+});
+
+// recompute: given a scenario shock object, return { dscr, annualCashFlow }
+const recompute = ({ rentMult, vacancyAdd, opexMult, rateAdd, exitCapAdd }) => {
+  const baseEgi = 1824000;
+  const egi = baseEgi * rentMult * (1 - vacancyAdd);
+  const opex = 400000 * opexMult;
+  const noi = egi - opex;
+  const ads = 1500000 * (1 + rateAdd);
+  return { dscr: ads > 0 ? noi / ads : 0, annualCashFlow: noi - ads };
+};
+
+describe('stressTests', () => {
+  const results = stressTests(recompute);
+  it('runs all named scenarios including the combined bad case', () => {
+    const names = results.map((r) => r.scenario);
+    expect(names).toContain('rent-5');
+    expect(names).toContain('rent-10');
+    expect(names).toContain('vacancy+5');
+    expect(names).toContain('opex+10');
+    expect(names).toContain('opex+20');
+    expect(names).toContain('rate+100bps');
+    expect(names).toContain('rate+200bps');
+    expect(names).toContain('exitCap+50bps');
+    expect(names).toContain('exitCap+100bps');
+    expect(names).toContain('combined-bad-case');
+  });
+  it('each scenario reports DSCR>=1.0 pass/fail and cash-flow-positive pass/fail', () => {
+    for (const r of results) {
+      expect(typeof r.dscrPass).toBe('boolean');
+      expect(typeof r.cashFlowPass).toBe('boolean');
+    }
   });
 });
