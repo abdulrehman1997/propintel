@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compositeScore, redFlagGates, stressTests } from '../lib/scoring.js';
+import { compositeScore, redFlagGates, stressTests, sensitivityGrid } from '../lib/scoring.js';
 
 const strong = { cashOnCash: 0.12, dscr: 1.5, irr: 0.18, equityMultiple: 2.2,
   capRate: 0.07, grm: 7, marketGrade: 'A', breakEvenOccupancy: 0.65, debtYield: 0.12, ageFactor: 0.9 };
@@ -94,5 +94,27 @@ describe('stressTests', () => {
       expect(typeof r.dscrPass).toBe('boolean');
       expect(typeof r.cashFlowPass).toBe('boolean');
     }
+  });
+});
+
+describe('sensitivityGrid', () => {
+  const grid = sensitivityGrid({
+    rowVar: 'exitCap', rowValues: [0.05, 0.055, 0.06],
+    colVar: 'rentGrowth', colValues: [0.02, 0.03, 0.04],
+    compute: ({ exitCap, rentGrowth }) => Math.round((rentGrowth / exitCap) * 1000) / 1000,
+  });
+  it('returns a matrix sized rows x cols with axis labels', () => {
+    expect(grid.rowVar).toBe('exitCap');
+    expect(grid.colVar).toBe('rentGrowth');
+    expect(grid.cells).toHaveLength(3);
+    expect(grid.cells[0]).toHaveLength(3);
+  });
+  it('computes each cell from the two varied inputs', () => {
+    // row exitCap=0.05, col rentGrowth=0.03 => 0.6
+    expect(grid.cells[0][1]).toBeCloseTo(0.6, 3);
+  });
+  it('preserves the axis value arrays', () => {
+    expect(grid.rowValues).toEqual([0.05, 0.055, 0.06]);
+    expect(grid.colValues).toEqual([0.02, 0.03, 0.04]);
   });
 });
