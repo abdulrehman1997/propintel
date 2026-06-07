@@ -75,3 +75,7 @@ ALTER TABLE listings ADD COLUMN IF NOT EXISTS latitude       DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS longitude      DOUBLE PRECISION;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS rent_zestimate NUMERIC;
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS detail_url     TEXT;
+-- Zillow rows often have a null street (the (source,street,zip,price) unique
+-- constraint can't dedupe nulls), but always carry a zpid. A partial unique
+-- index on zpid lets the live importer upsert idempotently on re-run.
+CREATE UNIQUE INDEX IF NOT EXISTS uq_listings_zpid ON listings (zpid) WHERE zpid IS NOT NULL;

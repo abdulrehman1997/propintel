@@ -79,8 +79,9 @@ export async function upsertZillowListings(rows) {
          (source,status,street,city,state,zip,price,beds,baths,sqft,lot_acres,
           property_type,photo_url,zpid,latitude,longitude,rent_zestimate,detail_url)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
-       ON CONFLICT (source, street, zip, price) DO UPDATE SET
+       ON CONFLICT (zpid) WHERE zpid IS NOT NULL DO UPDATE SET
          status=EXCLUDED.status, beds=EXCLUDED.beds, baths=EXCLUDED.baths,
+         street=EXCLUDED.street, city=EXCLUDED.city, price=EXCLUDED.price,
          sqft=EXCLUDED.sqft, lot_acres=EXCLUDED.lot_acres,
          property_type=EXCLUDED.property_type, photo_url=EXCLUDED.photo_url,
          zpid=EXCLUDED.zpid, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude,
