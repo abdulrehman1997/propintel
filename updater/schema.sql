@@ -44,3 +44,26 @@ CREATE TABLE IF NOT EXISTS refresh_log (
   rows_upserted INTEGER,
   error_msg  TEXT
 );
+
+CREATE TABLE IF NOT EXISTS listings (
+  id            SERIAL PRIMARY KEY,
+  source        TEXT NOT NULL,
+  status        TEXT NOT NULL,
+  street        TEXT,
+  city          TEXT,
+  state         TEXT,
+  zip           TEXT NOT NULL,
+  price         NUMERIC NOT NULL,
+  beds          INTEGER,
+  baths         NUMERIC,
+  sqft          INTEGER,
+  lot_acres     NUMERIC,
+  property_type TEXT DEFAULT 'single_family',
+  list_date     DATE,
+  imported_at   TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (source, street, zip, price)
+);
+CREATE INDEX IF NOT EXISTS idx_listings_zip ON listings (zip);
+CREATE INDEX IF NOT EXISTS idx_listings_price ON listings (price);
+CREATE INDEX IF NOT EXISTS idx_listings_state_city ON listings (state, city);
+CREATE INDEX IF NOT EXISTS idx_listings_beds ON listings (beds);

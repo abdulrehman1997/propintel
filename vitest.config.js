@@ -12,7 +12,9 @@ export default defineConfig({
       "lib/**/__tests__/**/*.test.{js,jsx}",
       "app/**/*.test.{js,jsx}",
       "app/**/__tests__/**/*.test.{js,jsx}",
+      "updater/__tests__/**/*.test.{js,jsx}",
     ],
+    environmentMatchGlobs: [["updater/**/*.test.{js,jsx}", "node"]],
     coverage: {
       provider: "v8",
       include: ["lib/**/*.js"],
