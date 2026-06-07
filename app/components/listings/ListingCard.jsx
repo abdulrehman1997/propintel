@@ -6,9 +6,19 @@ export function ListingCard({ listing: l, onCompare }) {
   return (
     <div className="card-shell p-2">
       <div className="card-core overflow-hidden">
-        <div className="placeholder h-40 flex items-center justify-center text-ink-300">
-          {l.city}
-        </div>
+        {l.photo_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={l.photo_url}
+            alt={`${l.city}, ${l.state}`}
+            loading="lazy"
+            className="h-40 w-full object-cover"
+          />
+        ) : (
+          <div className="placeholder h-40 flex items-center justify-center text-ink-300">
+            {l.city}
+          </div>
+        )}
         <div className="p-4 space-y-1">
           <p className="font-display text-xl font-medium text-ink-900">
             {formatCurrency(l.price)}

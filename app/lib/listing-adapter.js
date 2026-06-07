@@ -31,9 +31,14 @@ function rentFromFmr(fmr = {}, beds) {
 export function listingToResidentialInputs(listing, fmr) {
   const price = Number(listing.price) || 0;
   const beds = Number(listing.beds) || 0;
-  // FMR rent, else a conservative 0.7%-of-price monthly fallback.
-  // Guard null/undefined fmr (a ZIP with no FMR row) so we never destructure null.
-  const rent = rentFromFmr(fmr || {}, beds) ?? Math.round(price * 0.007);
+  // Rent precedence: Zillow rentZestimate (real, per-property) → HUD FMR for the
+  // ZIP+beds → conservative 0.7%-of-price fallback. Guard null fmr.
+  const rent =
+    (Number(listing.rent_zestimate) > 0
+      ? Number(listing.rent_zestimate)
+      : null) ??
+    rentFromFmr(fmr || {}, beds) ??
+    Math.round(price * 0.007);
 
   return {
     ...DEFAULT_RESIDENTIAL,

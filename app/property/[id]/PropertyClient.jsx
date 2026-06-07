@@ -16,6 +16,14 @@ export function PropertyClient({ listing, fmr, neighborhood }) {
 
   return (
     <main className="max-w-[1240px] mx-auto px-6 md:px-10 py-10 space-y-6">
+      {listing.photo_url && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={listing.photo_url}
+          alt={`${listing.street || listing.city}, ${listing.state}`}
+          className="w-full h-72 object-cover rounded-3xl shadow-soft"
+        />
+      )}
       <header className="flex flex-wrap items-start gap-3">
         <div className="flex-1 min-w-0">
           <h1 className="font-display text-2xl font-medium text-ink-900">

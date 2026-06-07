@@ -67,3 +67,11 @@ CREATE INDEX IF NOT EXISTS idx_listings_zip ON listings (zip);
 CREATE INDEX IF NOT EXISTS idx_listings_price ON listings (price);
 CREATE INDEX IF NOT EXISTS idx_listings_state_city ON listings (state, city);
 CREATE INDEX IF NOT EXISTS idx_listings_beds ON listings (beds);
+
+-- Live-source enrichment (Zillow API): photo, zpid, geo, real rent estimate.
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS photo_url      TEXT;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS zpid           TEXT;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS latitude       DOUBLE PRECISION;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS longitude      DOUBLE PRECISION;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS rent_zestimate NUMERIC;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS detail_url     TEXT;
