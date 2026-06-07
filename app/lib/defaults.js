@@ -1,0 +1,71 @@
+// Default deal inputs and the results-panel tab definitions.
+// Extracted from page.jsx so the App component carries only state + behaviour.
+
+export const DEFAULT_RESIDENTIAL = {
+  purchasePrice: 350000,
+  repairCosts: 0,
+  downPaymentPct: 20,
+  interestRate: 7.0,
+  loanTermYears: 30,
+  annualPropertyTax: 4200,
+  annualInsurance: 1800,
+  monthlyHOA: 0,
+  monthlyRent: 2200,
+  vacancyPct: 5,
+  managementPct: 10,
+  maintenancePct: 1,
+  capExPct: 5,
+  // projection & exit (previously hardcoded)
+  holdYears: 5,
+  appreciationPct: 3,
+  rentGrowthPct: 3,
+  expenseGrowthPct: 3,
+  exitCapRate: 0,
+  saleCostPct: 6,
+  // BRRRR / refi
+  arv: 420000,
+  rehabBudget: 0,
+  rehabMonths: 0,
+  hardMoneyRate: 0,
+  refiLtv: 75,
+  refiRate: 7,
+  zipCode: "",
+  bedrooms: 3,
+};
+
+export const DEFAULT_COMMERCIAL = {
+  assetType: "multifamily",
+  purchasePrice: 2000000,
+  squareFeet: 12000,
+  rentableSqft: 12000,
+  units: [{ count: 8, marketRent: 2500, inPlaceRent: 2400 }],
+  leaseType: "gross",
+  recoveryRatio: 0,
+  vacancyPct: 5,
+  creditLossPct: 1,
+  otherIncomeAnnual: 0,
+  opexAnnual: 96000,
+  annualOperatingExpenses: 96000,
+  goingInCapRate: 6,
+  exitCapRate: 6.5,
+  maxLTV: 75,
+  minDSCR: 1.25,
+  minDebtYield: 8,
+  interestRate: 7,
+  amortYears: 25,
+  loanTermYears: 25,
+  interestOnly: false,
+  holdYears: 5,
+  rentGrowthPct: 3,
+  expenseGrowthPct: 3,
+  saleCostPct: 2,
+};
+
+export const RESULT_TABS = [
+  { id: "deal", label: "Deal Analysis" },
+  { id: "charts", label: "Charts" },
+  { id: "stress", label: "Stress Tests", residentialOnly: true },
+  { id: "brrrr", label: "BRRRR", residentialOnly: true },
+  { id: "neighborhood", label: "Neighborhood", residentialOnly: true },
+  { id: "projections", label: "Projections" },
+];
