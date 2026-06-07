@@ -21,7 +21,7 @@ function toApiFilters({ q, minPrice, maxPrice, beds }) {
 }
 
 export default function SearchPage() {
-  const [filters, setFilters] = useState({ q: "New York City" });
+  const [filters, setFilters] = useState({ q: "" });
   const { listings, loading } = useListings(toApiFilters(filters));
   const { add } = useCompare();
 

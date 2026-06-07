@@ -1,24 +1,37 @@
 "use client";
 import Link from "next/link";
+import { cn } from "../../lib/cn";
 import { formatCurrency } from "../../lib/format";
 
 export function ListingCard({ listing: l, onCompare }) {
   return (
     <div className="card-shell p-2">
       <div className="card-core overflow-hidden">
-        {l.photo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={l.photo_url}
-            alt={`${l.city}, ${l.state}`}
-            loading="lazy"
-            className="h-40 w-full object-cover"
-          />
-        ) : (
-          <div className="placeholder h-40 flex items-center justify-center text-ink-300">
-            {l.city}
-          </div>
-        )}
+        <div className="relative">
+          {l.photo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={l.photo_url}
+              alt={`${l.city}, ${l.state}`}
+              loading="lazy"
+              className="h-40 w-full object-cover"
+            />
+          ) : (
+            <div className="placeholder h-40 flex items-center justify-center text-ink-300">
+              {l.city}
+            </div>
+          )}
+          <span
+            className={cn(
+              "absolute top-2 left-2 text-[10px] font-semibold uppercase tracking-[0.12em] px-2.5 py-1 rounded-full",
+              l.status === "sold"
+                ? "bg-ink-900/80 text-paper-50"
+                : "bg-forest-700/90 text-paper-50",
+            )}
+          >
+            {l.status === "sold" ? "Recently Sold" : "For Sale"}
+          </span>
+        </div>
         <div className="p-4 space-y-1">
           <p className="font-display text-xl font-medium text-ink-900">
             {formatCurrency(l.price)}

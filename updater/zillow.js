@@ -8,11 +8,16 @@
 //   ZILLOW_API_PATH default /search/bylocation  (override to the for-sale endpoint)
 //   ZILLOW_LOCATIONS comma list, e.g. "NY,New York,Brooklyn" (default "NY")
 //   ZILLOW_MAX_PAGES default 1
+import { pathToFileURL } from "node:url";
 import { pool } from "./db.js";
 
 const KEY = process.env.RAPIDAPI_KEY;
-const HOST =
-  process.env.RAPIDAPI_HOST || "real-estate-zillow-com.p.rapidapi.com";
+// Tolerate a host pasted with scheme/trailing slash; header needs the bare host.
+const HOST = (
+  process.env.RAPIDAPI_HOST || "real-estate-zillow-com.p.rapidapi.com"
+)
+  .replace(/^https?:\/\//, "")
+  .replace(/\/+$/, "");
 const PATH = process.env.ZILLOW_API_PATH || "/search/bylocation";
 const LOCATIONS = (process.env.ZILLOW_LOCATIONS || "NY")
   .split(",")
@@ -106,7 +111,15 @@ export async function upsertZillowListings(rows) {
 }
 
 async function fetchPage(location, page) {
-  const url = `https://${HOST}${PATH}?location=${encodeURIComponent(location)}&page=${page}`;
+  // real-estate-zillow-com params: location_or_rid + property_types/sort/doz.
+  const qs = new URLSearchParams({
+    location_or_rid: location,
+    property_types: "house",
+    sort: "relevant",
+    page: String(page),
+    doz: "7",
+  });
+  const url = `https://${HOST}${PATH}?${qs}`;
   const res = await fetch(url, {
     headers: { "x-rapidapi-key": KEY, "x-rapidapi-host": HOST },
   });
@@ -144,7 +157,8 @@ export async function importZillow() {
   return kept;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL handles spaces/encoding in the project path correctly.
+if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
   importZillow()
     .then(() => pool.end())
     .catch((e) => {
