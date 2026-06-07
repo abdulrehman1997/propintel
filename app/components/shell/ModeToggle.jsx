@@ -12,7 +12,7 @@ export const ModeToggle = ({ mode, onChange }) => (
   <div
     role="group"
     aria-label="Property type"
-    className="inline-flex p-1 bg-paper-100 rounded-full border border-paper-200 shadow-inset"
+    className="inline-flex max-w-full p-1 bg-paper-100 rounded-full border border-paper-200 shadow-inset"
   >
     {MODES.map(({ id, label, icon: Icon }) => {
       const isActive = mode === id;
@@ -23,7 +23,7 @@ export const ModeToggle = ({ mode, onChange }) => (
           aria-pressed={isActive}
           onClick={() => onChange(id)}
           className={cn(
-            'relative flex items-center gap-2 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full transition-colors duration-200',
+            'relative flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full transition-colors duration-200',
             isActive ? 'text-paper-50' : 'text-ink-500 hover:text-ink-700',
           )}
         >

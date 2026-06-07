@@ -65,7 +65,10 @@ export const analyzeResidentialDeal = (inputs) => {
   const proj = projectResidential(eIn);
 
   const exitYear = proj.years[proj.years.length - 1];
-  const exitValue = exitYear?.propertyValue ?? null;
+  // Use the terminal sale value the returns math actually uses (cap-based when an
+  // exit cap is set, appreciated value otherwise) so the "Exit Value" tile is
+  // consistent with the IRR / equity multiple. Falls back to appreciated value.
+  const exitValue = proj.saleValue ?? exitYear?.propertyValue ?? null;
 
   const scoreInput = {
     cashOnCash: base.cashOnCash,
@@ -316,11 +319,13 @@ export const residentialStressTests = (inputs) => {
  */
 export const residentialSensitivityCompute = (inp) => {
   const eIn = toResidentialEngineInput(inp);
-  const r = analyzeResidential(eIn);
-  // r.irr is already expressed as a percentage (see pct() at top of file).
-  const leveredIrr = r.irr;
+  // The levered IRR comes from projectResidential().irr (a fraction), NOT
+  // analyzeResidential() — the latter has no irr field. Convert to a percentage
+  // to match the heatmap's display contract.
+  const proj = projectResidential(eIn);
+  const leveredIrr = proj.irr;
   if (leveredIrr == null || Number.isNaN(leveredIrr)) return 0;
-  return +leveredIrr.toFixed(2);
+  return +(leveredIrr * 100).toFixed(2);
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

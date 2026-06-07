@@ -24,7 +24,9 @@ describe('formatPercent', () => {
   it('formats zero', () => {
     expect(formatPercent(0)).toBe('0.00%');
   });
-  it('handles null gracefully', () => {
-    expect(formatPercent(null)).toBe('0.00%');
+  it('renders N/A for an undefined metric (null), not a misleading 0.00%', () => {
+    expect(formatPercent(null)).toBe('N/A');
+    expect(formatPercent(undefined)).toBe('N/A');
+    expect(formatPercent(NaN)).toBe('N/A');
   });
 });
