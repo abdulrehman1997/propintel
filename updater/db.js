@@ -11,6 +11,7 @@ export const pool = new Pool({
   connectionString:
     process.env.DATABASE_URL ||
     'postgres://propintel:propintel@localhost:5432/propintel',
+  ...(process.env.PGPORT ? { port: Number(process.env.PGPORT) } : {}),
 });
 
 export function query(text, params) {
