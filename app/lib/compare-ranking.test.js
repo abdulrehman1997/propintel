@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { rankDeals, COMPARE_METRICS } from './compare-ranking';
 
 const make = (over) => ({ name: 'D', mode: 'residential', inputs: {}, results: {
-  monthlyCashFlow: 100, cashOnCash: 5, capRate: 5, annualROI: 8, GRM: 12, investmentScore: 60, ...over,
+  monthlyCashFlow: 100, cashOnCash: 5, capRate: 5, irr: 9, equityMultiple: 1.5,
+  dscr: 1.3, GRM: 12, investmentScore: 60, ...over,
 }});
 
 describe('rankDeals', () => {
@@ -20,5 +21,12 @@ describe('rankDeals', () => {
   });
   it('exposes the metric list for table headers', () => {
     expect(COMPARE_METRICS.map((m) => m.key)).toContain('capRate');
+  });
+  it('ranks on real engine metrics (IRR + equity multiple)', () => {
+    const keys = COMPARE_METRICS.map((m) => m.key);
+    expect(keys).toContain('irr');
+    expect(keys).toContain('equityMultiple');
+    const ranked = rankDeals([make({ irr: 5 }), make({ irr: 18 })]);
+    expect(ranked.winners.irr).toBe(1);
   });
 });

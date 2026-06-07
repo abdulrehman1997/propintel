@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Copy, Check, MapPin, Search, Loader2, AlertCircle, CheckCircle,
   TrendingUp, Clock, ShieldCheck,
@@ -10,7 +10,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 // Lib
 import { cn } from './lib/cn';
 import { formatCurrency, formatPercent } from './lib/format';
-import { validateDeal } from './lib/deal-schema';
+import {
+  validateEngineInput,
+  residentialStressTests,
+  residentialSensitivityCompute,
+  analyzeBrrrrDeal,
+} from './lib/engine-adapter';
 
 // Hooks
 import { useDealAnalysis } from './hooks/useDealAnalysis';
@@ -31,6 +36,8 @@ import { CommercialInputs } from './components/inputs/CommercialInputs';
 
 // Results
 import { DealResults } from './components/results/DealResults';
+import { StressTestPanel } from './components/results/StressTestPanel';
+import { BrrrrPanel } from './components/results/BrrrrPanel';
 
 // Charts
 import { ProjectionChart } from './components/charts/ProjectionChart';
@@ -57,21 +64,50 @@ const DEFAULT_RESIDENTIAL = {
   managementPct: 10,
   maintenancePct: 1,
   capExPct: 5,
+  // projection & exit (previously hardcoded)
+  holdYears: 5,
+  appreciationPct: 3,
+  rentGrowthPct: 3,
+  expenseGrowthPct: 3,
+  exitCapRate: 0,
+  saleCostPct: 6,
+  // BRRRR / refi
+  arv: 420000,
+  rehabBudget: 0,
+  rehabMonths: 0,
+  hardMoneyRate: 0,
+  refiLtv: 75,
+  refiRate: 7,
   zipCode: '',
   bedrooms: 3,
 };
 
 const DEFAULT_COMMERCIAL = {
+  assetType: 'multifamily',
   purchasePrice: 2000000,
   squareFeet: 12000,
-  units: 8,
-  annualGrossIncome: 240000,
+  rentableSqft: 12000,
+  units: [{ count: 8, marketRent: 2500, inPlaceRent: 2400 }],
+  leaseType: 'gross',
+  recoveryRatio: 0,
+  vacancyPct: 5,
+  creditLossPct: 1,
+  otherIncomeAnnual: 0,
+  opexAnnual: 96000,
   annualOperatingExpenses: 96000,
-  downPaymentPct: 30,
-  interestRate: 7,
-  loanTermYears: 25,
   goingInCapRate: 6,
   exitCapRate: 6.5,
+  maxLTV: 75,
+  minDSCR: 1.25,
+  minDebtYield: 8,
+  interestRate: 7,
+  amortYears: 25,
+  loanTermYears: 25,
+  interestOnly: false,
+  holdYears: 5,
+  rentGrowthPct: 3,
+  expenseGrowthPct: 3,
+  saleCostPct: 2,
 };
 
 // ─── App ─────────────────────────────────────────────────────────────────────
@@ -103,10 +139,12 @@ export default function App() {
   const { deals: savedDeals, save: saveToStorage, remove: removeFromStorage } = useSavedDeals();
 
   // ── Input change handler ──
+  // String / array / boolean fields pass through untouched; numeric fields parse.
+  const PASSTHROUGH_KEYS = ['zipCode', 'assetType', 'leaseType', 'units', 'interestOnly'];
   const handleInputChange = useCallback((key, value) => {
     setInputs((prev) => ({
       ...prev,
-      [key]: key === 'zipCode' ? value : (parseFloat(value) || 0),
+      [key]: PASSTHROUGH_KEYS.includes(key) ? value : (parseFloat(value) || 0),
     }));
     // Clear error for this field on change
     setValidationErrors((prev) => {
@@ -160,9 +198,9 @@ Cap Rate: ${formatPercent(results.capRate)}`;
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // ── Validate before saving ──
+  // ── Validate before saving (engine zod schemas at the form boundary) ──
   const handleSaveDeal = (name) => {
-    const validation = validateDeal(mode, inputs);
+    const validation = validateEngineInput(mode, inputs);
     if (!validation.success) {
       setValidationErrors(validation.errors);
       return;
@@ -193,19 +231,21 @@ Cap Rate: ${formatPercent(results.capRate)}`;
 
   const removeFromCompare = (id) => setCompareDeals((prev) => prev.filter((d) => d.id !== id));
 
-  // Sensitivity compute fn for residential
-  const sensitivityCompute = (inp) => {
-    try {
-      const { calculateMetrics } = require('../lib/calculations');
-      return +(calculateMetrics(inp).cashOnCash ?? 0).toFixed(2);
-    } catch {
-      return 0;
-    }
-  };
+  // Stress-test battery + BRRRR (residential only) — driven by the real engine.
+  const stressScenarios = useMemo(
+    () => (mode === 'residential' ? residentialStressTests(residentialInputs) : []),
+    [mode, residentialInputs],
+  );
+  const brrrrResults = useMemo(
+    () => (mode === 'residential' ? analyzeBrrrrDeal(residentialInputs) : null),
+    [mode, residentialInputs],
+  );
 
   const TABS = [
     { id: 'deal', label: 'Deal Analysis' },
     { id: 'charts', label: 'Charts' },
+    { id: 'stress', label: 'Stress Tests', residentialOnly: true },
+    { id: 'brrrr', label: 'BRRRR', residentialOnly: true },
     { id: 'neighborhood', label: 'Neighborhood', residentialOnly: true },
     { id: 'projections', label: 'Projections' },
   ];
@@ -362,19 +402,27 @@ Cap Rate: ${formatPercent(results.capRate)}`;
                       <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Cash-on-Cash Sensitivity (Rate × Exit Cap)</h4>
                       <SensitivityHeatmap
                         baseInputs={residentialInputs}
-                        compute={(inp) => {
-                          try {
-                            // eslint-disable-next-line @typescript-eslint/no-require-imports
-                            const { calculateMetrics } = require('../lib/calculations');
-                            return +(calculateMetrics(inp).cashOnCash ?? 0).toFixed(2);
-                          } catch {
-                            return 0;
-                          }
-                        }}
+                        compute={residentialSensitivityCompute}
                         label="CoC Return"
                       />
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Stress Tests Tab */}
+              {activeTab === 'stress' && mode === 'residential' && (
+                <div className="p-8 animate-in fade-in duration-300">
+                  <h4 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2 mb-4">Stress-Test Battery</h4>
+                  <StressTestPanel scenarios={stressScenarios} />
+                </div>
+              )}
+
+              {/* BRRRR Tab */}
+              {activeTab === 'brrrr' && mode === 'residential' && (
+                <div className="p-8 animate-in fade-in duration-300">
+                  <h4 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2 mb-4">BRRRR / Refinance</h4>
+                  <BrrrrPanel inputs={residentialInputs} results={brrrrResults} onChange={handleInputChange} />
                 </div>
               )}
 

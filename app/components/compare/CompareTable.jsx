@@ -9,6 +9,8 @@ const formatMetric = (key, value) => {
   if (key === 'monthlyCashFlow') return formatCurrency(value);
   if (key === 'GRM') return Number(value).toFixed(1);
   if (key === 'investmentScore') return Math.round(value);
+  if (key === 'equityMultiple') return `${Number(value).toFixed(2)}x`;
+  if (key === 'dscr') return Number(value).toFixed(2);
   return formatPercent(value);
 };
 
