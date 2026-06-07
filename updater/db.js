@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const pool = new Pool({
   connectionString:
     process.env.DATABASE_URL ||
-    'postgres://propintel:propintel@localhost:5432/propintel',
+    'postgres://propintel:propintel@localhost:5433/propintel',
   ...(process.env.PGPORT ? { port: Number(process.env.PGPORT) } : {}),
 });
 
