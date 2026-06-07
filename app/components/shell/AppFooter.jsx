@@ -1,17 +1,18 @@
 'use client';
-import { TrendingUp } from 'lucide-react';
 
 export const AppFooter = () => (
-  <footer className="bg-white border-t border-slate-200 py-12 px-6 mt-12 text-center">
-    <div className="max-w-6xl mx-auto text-slate-400">
-      <div className="flex items-center justify-center gap-2 mb-4">
-        <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-          <TrendingUp size={14} className="text-white" />
-        </div>
-        <span className="font-bold text-slate-800">PropIntel</span>
-      </div>
-      <p className="text-sm">Professional Real Estate Analysis for the Individual Investor.</p>
-      <p className="text-[10px] mt-8 uppercase tracking-widest">&copy; 2026 PropIntel Systems. Built with Antigravity.</p>
+  <footer className="w-full mt-20 border-t border-paper-200 bg-paper-100">
+    <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-12 text-center">
+      <span className="font-display text-2xl font-light tracking-tight text-forest-700">
+        PropIntel
+      </span>
+      <div className="hairline-rule max-w-xs mx-auto my-5" />
+      <p className="text-sm text-ink-500">
+        Professional real estate analysis for the individual investor.
+      </p>
+      <p className="text-[10px] mt-6 uppercase tracking-[0.3em] text-ink-400">
+        &copy; 2026 PropIntel Systems
+      </p>
     </div>
   </footer>
 );

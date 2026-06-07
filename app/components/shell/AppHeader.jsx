@@ -1,30 +1,36 @@
 'use client';
 import { motion } from 'framer-motion';
-import { TrendingUp } from 'lucide-react';
 
 export const AppHeader = () => (
-  <header className="bg-[#0F172A] text-white py-12 px-6 relative overflow-hidden">
-    <div className="max-w-6xl mx-auto relative z-10">
+  <header className="w-full bg-forest-700 text-paper-50 relative overflow-hidden">
+    {/* subtle vertical sheen, no bling */}
+    <div
+      className="absolute inset-0 pointer-events-none opacity-60"
+      style={{
+        background:
+          'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 28%, transparent 70%, rgba(0,0,0,0.18) 100%)',
+      }}
+    />
+    <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-12 md:py-16 relative z-10">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row md:items-end justify-between gap-6"
+        transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
       >
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <TrendingUp size={20} className="text-white" />
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight">PropIntel</h1>
-          </div>
-          <p className="text-slate-400 text-lg">"Know your numbers before you make an offer."</p>
-          <p className="text-slate-500 text-sm mt-1">Real estate investment analyzer for individual investors</p>
-        </div>
+        <p className="text-[11px] uppercase tracking-[0.35em] text-brass-400 font-semibold mb-4">
+          Real Estate Intelligence
+        </p>
+        <h1 className="font-display text-5xl md:text-7xl font-light tracking-tight text-paper-50 leading-[0.95]">
+          PropIntel
+        </h1>
+        <div className="mt-6 mb-5 h-px max-w-md bg-forest-400/40" />
+        <p className="font-display italic text-lg md:text-xl text-paper-100/90 max-w-xl">
+          Know your numbers before you make an offer.
+        </p>
+        <p className="text-paper-200/60 text-sm mt-2 tracking-wide">
+          Investment analysis for the discerning individual investor.
+        </p>
       </motion.div>
     </div>
-    <div
-      className="absolute inset-0 opacity-10 pointer-events-none"
-      style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
-    />
   </header>
 );

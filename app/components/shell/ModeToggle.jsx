@@ -9,7 +9,11 @@ const MODES = [
 ];
 
 export const ModeToggle = ({ mode, onChange }) => (
-  <div role="group" aria-label="Property type" className="inline-flex p-1 bg-slate-100 rounded-xl">
+  <div
+    role="group"
+    aria-label="Property type"
+    className="inline-flex p-1 bg-paper-100 rounded-full border border-paper-200 shadow-inset"
+  >
     {MODES.map(({ id, label, icon: Icon }) => {
       const isActive = mode === id;
       return (
@@ -19,12 +23,16 @@ export const ModeToggle = ({ mode, onChange }) => (
           aria-pressed={isActive}
           onClick={() => onChange(id)}
           className={cn(
-            'relative flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors',
-            isActive ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700',
+            'relative flex items-center gap-2 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full transition-colors duration-200',
+            isActive ? 'text-paper-50' : 'text-ink-500 hover:text-ink-700',
           )}
         >
           {isActive && (
-            <motion.span layoutId="mode-toggle-bg" className="absolute inset-0 bg-white rounded-lg shadow-sm" />
+            <motion.span
+              layoutId="mode-toggle-bg"
+              transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+              className="absolute inset-0 bg-forest-700 rounded-full shadow-soft"
+            />
           )}
           <Icon size={14} className="relative z-10" />
           <span className="relative z-10">{label}</span>
