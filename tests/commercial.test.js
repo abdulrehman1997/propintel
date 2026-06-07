@@ -42,6 +42,15 @@ describe('analyzeCommercial income stack', () => {
     expect(nnn.noi).toBeGreaterThan(gross.noi);
     expect(nnn.oer).toBeLessThan(gross.oer);
   });
+  it('break-even occupancy uses GPR (market rent) as denominator, not GSR (in-place)', () => {
+    // GPR = 100 * 1700 * 12 = 2,040,000  (market)
+    // GSR = 100 * 1600 * 12 = 1,920,000  (in-place, lower)
+    // Correct: breakEvenOccupancy = (opex + ads) / GPR
+    const r = analyzeCommercial({ ...mf, opexAnnual: 400000 });
+    // ads and opex are fixed; compute expected using GPR
+    const expectedGPR = 100 * 1700 * 12; // 2,040,000
+    expect(r.breakEvenOccupancy).toBeCloseTo((r.opex + r.annualDebtService) / expectedGPR, 6);
+  });
 });
 
 describe('projectCommercial returns', () => {
