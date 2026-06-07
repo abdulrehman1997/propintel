@@ -42,6 +42,8 @@ export async function upsertListings(rows) {
 }
 
 const MAX_ROWS = Number(process.env.LISTINGS_MAX || 40000);
+// Optional single-state focus, e.g. LISTINGS_STATE=NY to load only New York.
+const STATE_FILTER = (process.env.LISTINGS_STATE || "").trim().toUpperCase();
 
 export async function importListings() {
   const batch = [];
@@ -52,6 +54,7 @@ export async function importListings() {
   for await (const row of parser) {
     const n = normalizeListing(row);
     if (!n) continue;
+    if (STATE_FILTER && n.state !== STATE_FILTER) continue;
     batch.push(n);
     kept++;
     if (batch.length >= 500) {
@@ -61,7 +64,9 @@ export async function importListings() {
   }
   if (batch.length) await upsertListings(batch);
   // eslint-disable-next-line no-console
-  console.log(`listings: imported ${kept} rows`);
+  console.log(
+    `listings: imported ${kept} rows${STATE_FILTER ? ` (state=${STATE_FILTER})` : ""}`,
+  );
   return kept;
 }
 
