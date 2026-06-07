@@ -12,9 +12,9 @@ const COMPONENTS = [
 ];
 
 const barColor = (score) => {
-  if (score >= 70) return '#10b981';
-  if (score >= 40) return '#f59e0b';
-  return '#f43f5e';
+  if (score >= 70) return '#1F3D32'; // forest
+  if (score >= 40) return '#A9842F'; // muted amber
+  return '#A85C45'; // muted clay
 };
 
 export const ScoreBreakdownChart = ({ results }) => {
@@ -26,10 +26,14 @@ export const ScoreBreakdownChart = ({ results }) => {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-        <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-        <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} width={32} />
-        <RTooltip formatter={(v) => `${v} / 100`} />
+        <CartesianGrid strokeDasharray="2 4" stroke="#E7E1D5" vertical={false} />
+        <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#9A9385' }} stroke="#D6CFC0" />
+        <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#9A9385' }} stroke="#D6CFC0" width={32} />
+        <RTooltip
+          formatter={(v) => `${v} / 100`}
+          cursor={{ fill: 'rgba(31,61,50,0.06)' }}
+          contentStyle={{ background: '#fffdf8', border: '1px solid #E7E1D5', borderRadius: 12, fontSize: 12 }}
+        />
         <Bar dataKey="score" radius={[4, 4, 0, 0]}>
           {data.map((entry, idx) => (
             <Cell key={idx} fill={barColor(entry.score)} />

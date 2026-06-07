@@ -5,7 +5,7 @@ import { Card } from '../ui/Card';
 import { InputGroup } from '../ui/InputGroup';
 import { Home, DollarSign, Percent, TrendingUp } from 'lucide-react';
 
-const inputCls = 'w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all tabular-nums text-sm';
+const inputCls = 'w-full px-4 py-2.5 bg-paper-50 border border-paper-200 rounded-xl focus:ring-2 focus:ring-forest-300 focus:border-forest-400 outline-none transition-colors duration-200 tabular-nums text-sm text-ink-900';
 
 const FieldError = ({ message }) =>
   message ? <p className="text-xs text-rose-500 mt-1">{message}</p> : null;

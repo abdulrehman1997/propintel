@@ -112,24 +112,29 @@ export const DealResults = ({ results }) => {
 
   return (
     <>
-      <div className="p-8 text-center border-b border-slate-50 bg-slate-50/50">
+      <div className="px-8 py-10 text-center border-b border-paper-200 bg-paper-100/50">
         <div className="flex flex-col items-center">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-ink-400 font-semibold mb-5">
+            Investment Grade
+          </p>
           <motion.div
             key={investmentGrade}
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             className={cn(
-              'w-24 h-24 rounded-full flex items-center justify-center text-5xl font-black mb-4 shadow-lg border-4',
+              'w-28 h-28 rounded-full flex items-center justify-center font-display text-6xl font-light mb-5 shadow-soft border',
               getScoreColor(investmentScore),
             )}
           >
             {investmentGrade}
           </motion.div>
-          <div className="text-2xl font-bold text-slate-800 mb-1 flex items-center gap-2">
-            Score: {Math.round(investmentScore)} / 100
+          <div className="font-display text-2xl font-medium text-ink-900 mb-1.5 flex items-center gap-2">
+            {Math.round(investmentScore)}
+            <span className="text-ink-400 font-light text-xl">/ 100</span>
             {blended && <Tooltip text="Score includes neighborhood context factors (income, vacancy, employment)." />}
           </div>
-          <div className="text-slate-500 font-medium">
+          <div className="text-ink-500 text-sm max-w-sm">
             {GRADE_LABELS[investmentGrade] ?? ''}
           </div>
         </div>
