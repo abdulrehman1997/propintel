@@ -24,6 +24,9 @@ coverage/
 .playwright-cli/
 scratch-*
 
+# Superpowers brainstorm mockups
+.superpowers/
+
 # Env
 .env
 .env*.local
