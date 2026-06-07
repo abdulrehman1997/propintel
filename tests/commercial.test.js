@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { analyzeCommercial } from '../lib/commercial.js';
+import { analyzeCommercial, projectCommercial } from '../lib/commercial.js';
 
 const mf = {
   assetType: 'multifamily', purchasePrice: 25000000, rentableSqft: 100000,
@@ -41,5 +41,23 @@ describe('analyzeCommercial income stack', () => {
     const nnn = analyzeCommercial({ ...mf, leaseType: 'NNN', recoveryRatio: 0.9, opexAnnual: 400000 });
     expect(nnn.noi).toBeGreaterThan(gross.noi);
     expect(nnn.oer).toBeLessThan(gross.oer);
+  });
+});
+
+describe('projectCommercial returns', () => {
+  const p = projectCommercial({ ...mf, opexAnnual: 400000 });
+  it('produces unlevered and levered IRR over the hold', () => {
+    expect(p.unleveredIRR).not.toBeNull();
+    expect(p.leveredIRR).not.toBeNull();
+  });
+  it('unlevered CF0 = -purchasePrice; levered CF0 = -equity', () => {
+    expect(p.unleveredCashFlows[0]).toBeCloseTo(-25000000, 0);
+    expect(p.leveredCashFlows[0]).toBeCloseTo(-p.equity, 0);
+  });
+  it('flags over-leverage when levered IRR <= unlevered IRR', () => {
+    expect(typeof p.leverageAccretive).toBe('boolean');
+  });
+  it('reports an equity multiple', () => {
+    expect(p.equityMultiple).toBeGreaterThan(0);
   });
 });
