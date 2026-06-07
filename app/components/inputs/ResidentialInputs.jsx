@@ -3,7 +3,7 @@ import { cn } from '../../lib/cn';
 import { formatCurrency } from '../../lib/format';
 import { Card } from '../ui/Card';
 import { InputGroup } from '../ui/InputGroup';
-import { Home, DollarSign, Percent } from 'lucide-react';
+import { Home, DollarSign, Percent, TrendingUp } from 'lucide-react';
 
 const inputCls = 'w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all tabular-nums text-sm';
 
@@ -194,6 +194,76 @@ export const ResidentialInputs = ({ inputs, results, onChange, errors = {} }) =>
               onChange={(e) => handle('capExPct', e.target.value)}
               className="w-full"
             />
+          </InputGroup>
+          <InputGroup label="HOA (Monthly)">
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+              <input
+                type="number"
+                value={inputs.monthlyHOA ?? 0}
+                onChange={(e) => handle('monthlyHOA', e.target.value)}
+                className={cn(inputCls, 'pl-7')}
+              />
+            </div>
+          </InputGroup>
+        </div>
+      </Card>
+
+      <Card title="Projection & Exit" icon={TrendingUp}>
+        <div className="grid grid-cols-2 gap-4">
+          <InputGroup label="Hold Period (Years)">
+            <input
+              type="number" min="1" max="40"
+              value={inputs.holdYears ?? 5}
+              onChange={(e) => handle('holdYears', e.target.value)}
+              className={inputCls}
+            />
+          </InputGroup>
+          <InputGroup label={`Appreciation: ${inputs.appreciationPct ?? 3}%`} tooltip="Annual property value growth — was previously hardcoded.">
+            <input
+              type="range" min="0" max="10" step="0.5"
+              value={inputs.appreciationPct ?? 3}
+              onChange={(e) => handle('appreciationPct', e.target.value)}
+              className="w-full"
+            />
+          </InputGroup>
+          <InputGroup label={`Rent Growth: ${inputs.rentGrowthPct ?? 3}%`}>
+            <input
+              type="range" min="0" max="10" step="0.5"
+              value={inputs.rentGrowthPct ?? 3}
+              onChange={(e) => handle('rentGrowthPct', e.target.value)}
+              className="w-full"
+            />
+          </InputGroup>
+          <InputGroup label={`Expense Growth: ${inputs.expenseGrowthPct ?? 3}%`}>
+            <input
+              type="range" min="0" max="10" step="0.5"
+              value={inputs.expenseGrowthPct ?? 3}
+              onChange={(e) => handle('expenseGrowthPct', e.target.value)}
+              className="w-full"
+            />
+          </InputGroup>
+          <InputGroup label="Exit Cap Rate" tooltip="Terminal value = forward NOI ÷ exit cap. Leave 0 to use appreciated value.">
+            <div className="relative">
+              <input
+                type="number" step="0.1"
+                value={inputs.exitCapRate ?? 0}
+                onChange={(e) => handle('exitCapRate', e.target.value)}
+                className={cn(inputCls, 'pr-7')}
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">%</span>
+            </div>
+          </InputGroup>
+          <InputGroup label="Sale Cost %" tooltip="Selling costs deducted from terminal value.">
+            <div className="relative">
+              <input
+                type="number" step="0.5"
+                value={inputs.saleCostPct ?? 6}
+                onChange={(e) => handle('saleCostPct', e.target.value)}
+                className={cn(inputCls, 'pr-7')}
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">%</span>
+            </div>
           </InputGroup>
         </div>
       </Card>
