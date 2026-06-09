@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "../../lib/cn";
-import { formatCurrency, formatPercent } from "../../lib/format";
+import { formatCurrency } from "../../lib/format";
 
 const LABELS = {
   "rent-5": "Rent −5%",
