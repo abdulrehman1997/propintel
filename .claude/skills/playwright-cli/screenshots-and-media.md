@@ -285,13 +285,13 @@ playwright-cli video-stop recordings/checkout-happy-path.webm
 
 ### Use Cases
 
-| Scenario | Benefit |
-|----------|---------|
-| Bug reproduction | Share exact steps with developers |
-| Demo creation | Show feature flows to stakeholders |
-| Documentation | Record UI walkthroughs |
-| QA evidence | Prove a test scenario was completed |
-| Debugging | Watch what happened frame-by-frame |
+| Scenario         | Benefit                             |
+| ---------------- | ----------------------------------- |
+| Bug reproduction | Share exact steps with developers   |
+| Demo creation    | Show feature flows to stakeholders  |
+| Documentation    | Record UI walkthroughs              |
+| QA evidence      | Prove a test scenario was completed |
+| Debugging        | Watch what happened frame-by-frame  |
 
 ## Viewport Management
 

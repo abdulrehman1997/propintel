@@ -6,6 +6,7 @@ permissionMode: acceptEdits
 disallowedTools: Edit,Write,Bash
 maxTurns: 10
 ---
+
 For architectural complexity: use Sequential Thinking MCP before writing the plan.
 For straightforward tasks: plan directly.
 Produce numbered plan: files to change, approach, test strategy, rollback notes.

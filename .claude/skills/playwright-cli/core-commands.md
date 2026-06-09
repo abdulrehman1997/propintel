@@ -157,10 +157,10 @@ playwright-cli uncheck e12
 
 **When to use `fill` vs `type`**:
 
-| Command | Behavior | Use when |
-|---------|----------|----------|
-| `fill` | Clears field, sets value at once | Forms, login fields, standard inputs |
-| `type` | Sends individual keystrokes | Autocomplete, search-as-you-type, custom inputs that listen for keydown events |
+| Command | Behavior                         | Use when                                                                       |
+| ------- | -------------------------------- | ------------------------------------------------------------------------------ |
+| `fill`  | Clears field, sets value at once | Forms, login fields, standard inputs                                           |
+| `type`  | Sends individual keystrokes      | Autocomplete, search-as-you-type, custom inputs that listen for keydown events |
 
 ### File Upload
 

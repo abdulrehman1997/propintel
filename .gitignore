@@ -12,6 +12,28 @@ dist
 dist-ssr
 *.local
 
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Test coverage
+coverage/
+
+# Playwright CLI snapshots / scratch
+.playwright-cli/
+scratch-*
+
+# Superpowers brainstorm mockups
+.superpowers/
+
+# Listings dataset (download Kaggle CSV or sample here; not committed)
+updater/data/
+
+# Env
+.env
+.env*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

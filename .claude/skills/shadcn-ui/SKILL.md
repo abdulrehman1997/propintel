@@ -5,11 +5,12 @@ description: This skill should be used when the user asks to "build a frontend",
 
 # Shadcn UI & ShadcnBlocks Integration
 
-This skill enables building polished frontends using [shadcn/ui](https://ui.shadcn.com/) components and premium [ShadcnBlocks](https://shadcnblocks.com/) templates. Its primary capability is **intelligently recommending the best block or component** for any UI need — not just the right category, but the right *variant* within that category — then handling setup and installation.
+This skill enables building polished frontends using [shadcn/ui](https://ui.shadcn.com/) components and premium [ShadcnBlocks](https://shadcnblocks.com/) templates. Its primary capability is **intelligently recommending the best block or component** for any UI need — not just the right category, but the right _variant_ within that category — then handling setup and installation.
 
 ## When to Use
 
 Activate this skill when:
+
 - Creating a new frontend, landing page, marketing site, or app UI
 - The project uses or should use React/Next.js with Tailwind CSS
 - Pre-built UI sections (hero, pricing, features, testimonials, etc.) would accelerate development
@@ -18,12 +19,12 @@ Activate this skill when:
 
 ## Blocks vs Components
 
-| | Blocks | Components |
-|---|--------|------------|
-| **What** | Full page sections | Reusable UI elements |
-| **Size** | Hero, pricing, footer, etc. | Buttons, inputs, dialogs, etc. |
-| **Count** | 1,338 across 71 categories | 1,189 across 60+ groups |
-| **Access** | Premium (API key required) | Free |
+|             | Blocks                         | Components                              |
+| ----------- | ------------------------------ | --------------------------------------- |
+| **What**    | Full page sections             | Reusable UI elements                    |
+| **Size**    | Hero, pricing, footer, etc.    | Buttons, inputs, dialogs, etc.          |
+| **Count**   | 1,338 across 71 categories     | 1,189 across 60+ groups                 |
+| **Access**  | Premium (API key required)     | Free                                    |
 | **Install** | `@shadcnblocks/<name><number>` | `@shadcnblocks/<type>-<style>-<number>` |
 
 **Use blocks** to compose full page layouts from pre-built sections.
@@ -48,6 +49,7 @@ When recommending blocks, follow this progressive disclosure flow:
 **Step 1 — Infer from the request (always do this first)**
 
 Extract as many constraints as possible before asking anything:
+
 - **Section type**: hero, feature, pricing, testimonial, cta, faq, navbar, footer, contact, stats
 - **Goal keywords**: "signup" → convert/capture_leads, "trust" → trust, "compare plans" → compare
 - **Layout hints**: "grid" → grid_cards, "side by side" → split, "accordion" → accordion interaction
@@ -100,27 +102,27 @@ After the user picks, provide the install command and compose it into the page.
 
 These are the key dimensions from `references/block-index.md` used to differentiate blocks:
 
-| Dimension | What it tells you | Example values |
-|-----------|-------------------|----------------|
-| `layout` | Visual arrangement | centered, split_right_media, grid_cards, bento, alternating |
-| `tone` | Aesthetic feel | minimal, modern, bold, enterprise, elegant, playful |
-| `goal` | Business purpose | awareness, explain, trust, convert, capture_leads, compare |
-| `cta_pattern` | Action type | single_primary, primary_secondary, form_capture, multi_action |
-| `media` | Visual content | screenshot, illustration, video, icons, avatars, logos |
-| `interaction` | Dynamic behavior | static, accordion, tabs, carousel, toggle, hover |
-| `items_count` | Number of items displayed | few, moderate, many |
-| `content_density` | How much content | minimal, standard, rich |
-| `complexity` | Implementation effort | low, medium, high |
+| Dimension         | What it tells you         | Example values                                                |
+| ----------------- | ------------------------- | ------------------------------------------------------------- |
+| `layout`          | Visual arrangement        | centered, split_right_media, grid_cards, bento, alternating   |
+| `tone`            | Aesthetic feel            | minimal, modern, bold, enterprise, elegant, playful           |
+| `goal`            | Business purpose          | awareness, explain, trust, convert, capture_leads, compare    |
+| `cta_pattern`     | Action type               | single_primary, primary_secondary, form_capture, multi_action |
+| `media`           | Visual content            | screenshot, illustration, video, icons, avatars, logos        |
+| `interaction`     | Dynamic behavior          | static, accordion, tabs, carousel, toggle, hover              |
+| `items_count`     | Number of items displayed | few, moderate, many                                           |
+| `content_density` | How much content          | minimal, standard, rich                                       |
+| `complexity`      | Implementation effort     | low, medium, high                                             |
 
 ### When to Use Which Reference
 
-| Scenario | Use |
-|----------|-----|
-| Recommending best-fit blocks (default) | `references/block-index.md` — tagged picks with selection prompts |
-| User wants a specific numbered variant | `references/block-catalog.md` — full catalog with all variant numbers |
-| Section not in block-index (e.g., blog, gallery) | `references/block-catalog.md` — fall back to category defaults |
-| User wants to browse all options | Direct to https://shadcnblocks.com/explorer/blocks |
-| Need an individual UI element | `references/component-catalog.md` — free components |
+| Scenario                                         | Use                                                                   |
+| ------------------------------------------------ | --------------------------------------------------------------------- |
+| Recommending best-fit blocks (default)           | `references/block-index.md` — tagged picks with selection prompts     |
+| User wants a specific numbered variant           | `references/block-catalog.md` — full catalog with all variant numbers |
+| Section not in block-index (e.g., blog, gallery) | `references/block-catalog.md` — fall back to category defaults        |
+| User wants to browse all options                 | Direct to https://shadcnblocks.com/explorer/blocks                    |
+| Need an individual UI element                    | `references/component-catalog.md` — free components                   |
 
 ---
 
@@ -129,62 +131,69 @@ These are the key dimensions from `references/block-index.md` used to differenti
 For sections **not yet in block-index.md**, use these defaults:
 
 ### Content & Blog
-| Need | Category | Start With |
-|------|----------|------------|
-| Blog listing | `blog` (22 variants) | `blog1` |
-| Blog post page | `blogpost` (7 variants) | `blogpost1` |
-| Changelog | `changelog` (7 variants) | `changelog1` |
-| Code snippets | `code-example` (5 variants) | `code-example1` |
+
+| Need           | Category                    | Start With      |
+| -------------- | --------------------------- | --------------- |
+| Blog listing   | `blog` (22 variants)        | `blog1`         |
+| Blog post page | `blogpost` (7 variants)     | `blogpost1`     |
+| Changelog      | `changelog` (7 variants)    | `changelog1`    |
+| Code snippets  | `code-example` (5 variants) | `code-example1` |
 
 ### About & Team
-| Need | Category | Start With |
-|------|----------|------------|
-| About section | `about` (17 variants) | `about1` |
-| Team page | `team` (14 variants) | `team1` |
+
+| Need             | Category                 | Start With  |
+| ---------------- | ------------------------ | ----------- |
+| About section    | `about` (17 variants)    | `about1`    |
+| Team page        | `team` (14 variants)     | `team1`     |
 | Company timeline | `timeline` (15 variants) | `timeline1` |
-| Job listings | `careers` (9 variants) | `careers1` |
+| Job listings     | `careers` (9 variants)   | `careers1`  |
 
 ### Ecommerce
-| Need | Category | Start With |
-|------|----------|------------|
-| Product cards | `product-card` (10 variants) | `product-card1` |
-| Product listing | `product-list` (10 variants) | `product-list1` |
-| Product detail | `product-detail` (10 variants) | `product-detail1` |
-| Shopping cart | `shopping-cart` (11 variants) | `shopping-cart1` |
-| Checkout | `checkout` (6 variants) | `checkout1` |
-| Order history | `order-history` (5 variants) | `order-history1` |
+
+| Need            | Category                       | Start With        |
+| --------------- | ------------------------------ | ----------------- |
+| Product cards   | `product-card` (10 variants)   | `product-card1`   |
+| Product listing | `product-list` (10 variants)   | `product-list1`   |
+| Product detail  | `product-detail` (10 variants) | `product-detail1` |
+| Shopping cart   | `shopping-cart` (11 variants)  | `shopping-cart1`  |
+| Checkout        | `checkout` (6 variants)        | `checkout1`       |
+| Order history   | `order-history` (5 variants)   | `order-history1`  |
 
 ### App & Dashboard
-| Need | Category | Start With |
-|------|----------|------------|
-| Dashboard charts | `chart-card` (27 variants) | `chart-card10` |
-| Data tables | `data-table` (32 variants) | `data-table1` |
-| App sidebar | `sidebar` (21 variants) | `sidebar1` |
+
+| Need             | Category                          | Start With           |
+| ---------------- | --------------------------------- | -------------------- |
+| Dashboard charts | `chart-card` (27 variants)        | `chart-card10`       |
+| Data tables      | `data-table` (32 variants)        | `data-table1`        |
+| App sidebar      | `sidebar` (21 variants)           | `sidebar1`           |
 | App shell layout | `application-shell` (14 variants) | `application-shell1` |
-| User profile | `user-profile` (12 variants) | `user-profile1` |
+| User profile     | `user-profile` (12 variants)      | `user-profile1`      |
 
 ### Portfolio
-| Need | Category | Start With |
-|------|----------|------------|
-| Image gallery | `gallery` (48 variants) | `gallery1` |
-| Project listing | `projects` (25 variants) | `projects1` |
-| Project detail | `project` (33 variants) | `project1` |
-| Case studies | `case-studies` (6 variants) | `case-studies1` |
+
+| Need            | Category                    | Start With      |
+| --------------- | --------------------------- | --------------- |
+| Image gallery   | `gallery` (48 variants)     | `gallery1`      |
+| Project listing | `projects` (25 variants)    | `projects1`     |
+| Project detail  | `project` (33 variants)     | `project1`      |
+| Case studies    | `case-studies` (6 variants) | `case-studies1` |
 
 ### Visual & Decorative
-| Need | Category | Start With |
-|------|----------|------------|
+
+| Need                | Category                           | Start With            |
+| ------------------- | ---------------------------------- | --------------------- |
 | Background patterns | `background-pattern` (40 variants) | `background-pattern1` |
-| Animated shaders | `shader` (10 variants) | `shader1` |
-| Bento grid layout | `bento` (8 variants) | `bento1` |
+| Animated shaders    | `shader` (10 variants)             | `shader1`             |
+| Bento grid layout   | `bento` (8 variants)               | `bento1`              |
 
 ### Navigation & Misc
-| Need | Category | Start With |
-|------|----------|------------|
-| Announcement bar | `banner` (7 variants) | `banner1` |
-| Sale/promo bar | `promo-banner` (7 variants) | `promo-banner1` |
-| Partner logos | `logos` (13 variants) | `logos1` |
-| Comparisons | `compare` (10 variants) | `compare1` |
+
+| Need             | Category                    | Start With      |
+| ---------------- | --------------------------- | --------------- |
+| Announcement bar | `banner` (7 variants)       | `banner1`       |
+| Sale/promo bar   | `promo-banner` (7 variants) | `promo-banner1` |
+| Partner logos    | `logos` (13 variants)       | `logos1`        |
+| Comparisons      | `compare` (10 variants)     | `compare1`      |
 
 ---
 
@@ -192,26 +201,26 @@ For sections **not yet in block-index.md**, use these defaults:
 
 Consult `references/component-catalog.md` for the full catalog. Key groups:
 
-| Need | Component Group | Example |
-|------|----------------|---------|
-| Form layout | Form (86) | `form-signin-1` |
-| Labeled input | Field (38) | `field-standard-1` |
-| Input with addon | Input Group (39) | `input-group-standard-1` |
-| Searchable select | Combobox (42) | `combobox-standard-1` |
-| File upload | File Upload (44) | `file-upload-standard-1` |
-| Date picker | Date Picker (8) | `date-picker-standard-1` |
-| Alert message | Alert (25) | `alert-error-1` |
-| Confirm dialog | Alert Dialog (39) | `alert-dialog-standard-1` |
-| Loading skeleton | Skeleton (30) | `skeleton-standard-1` |
-| Toast notification | Sonner (24) | `sonner-standard-1` |
-| Empty state | Empty (22) | `empty-standard-1` |
-| Modal dialog | Dialog (17) | `dialog-standard-1` |
-| Side panel | Sheet (29) / Drawer (22) | `sheet-standard-1` |
-| Accordion | Accordion (21) | `accordion-standard-1` |
-| Data chart | Chart (70) | `chart-standard-1` |
-| Command palette | Command (21) | `command-standard-1` |
-| Dropdown menu | Dropdown Menu (30) | `dropdown-menu-standard-1` |
-| Keyboard shortcuts | KBD (39) | `kbd-standard-1` |
+| Need               | Component Group          | Example                    |
+| ------------------ | ------------------------ | -------------------------- |
+| Form layout        | Form (86)                | `form-signin-1`            |
+| Labeled input      | Field (38)               | `field-standard-1`         |
+| Input with addon   | Input Group (39)         | `input-group-standard-1`   |
+| Searchable select  | Combobox (42)            | `combobox-standard-1`      |
+| File upload        | File Upload (44)         | `file-upload-standard-1`   |
+| Date picker        | Date Picker (8)          | `date-picker-standard-1`   |
+| Alert message      | Alert (25)               | `alert-error-1`            |
+| Confirm dialog     | Alert Dialog (39)        | `alert-dialog-standard-1`  |
+| Loading skeleton   | Skeleton (30)            | `skeleton-standard-1`      |
+| Toast notification | Sonner (24)              | `sonner-standard-1`        |
+| Empty state        | Empty (22)               | `empty-standard-1`         |
+| Modal dialog       | Dialog (17)              | `dialog-standard-1`        |
+| Side panel         | Sheet (29) / Drawer (22) | `sheet-standard-1`         |
+| Accordion          | Accordion (21)           | `accordion-standard-1`     |
+| Data chart         | Chart (70)               | `chart-standard-1`         |
+| Command palette    | Command (21)             | `command-standard-1`       |
+| Dropdown menu      | Dropdown Menu (30)       | `dropdown-menu-standard-1` |
+| Keyboard shortcuts | KBD (39)                 | `kbd-standard-1`           |
 
 ---
 
@@ -241,6 +250,7 @@ If the script can't run (e.g., `jq` missing), configure manually:
 
 1. Add to `.env`: `SHADCNBLOCKS_API_KEY=<key>`
 2. Add registry to `components.json`:
+
 ```json
 {
   "registries": {
@@ -319,6 +329,7 @@ The ShadcnBlocks API key can be provided in multiple ways (checked in order):
 2. **1Password CLI**: The helper script uses `op read` to retrieve the key. Set `OP_SHADCNBLOCKS_REF` to your 1Password reference path, or it defaults to `op://Platform Infra/ShadcnBlocks API Key/credential`
 
 Retrieve the key using the helper script:
+
 ```bash
 bash "${CLAUDE_PLUGIN_ROOT}/skills/shadcn-ui/scripts/get-api-key.sh"
 ```
@@ -327,13 +338,13 @@ bash "${CLAUDE_PLUGIN_ROOT}/skills/shadcn-ui/scripts/get-api-key.sh"
 
 ## Troubleshooting
 
-| Issue | Resolution |
-|-------|-----------|
-| Auth error on install | Verify `SHADCNBLOCKS_API_KEY` is set in `.env` with a valid key |
-| Registry not found | Check `registries` key exists in `components.json` |
-| `components.json` missing | Run `npx shadcn@latest init` |
-| 1Password access | Run `op signin`; verify vault with `op vault list` |
-| Block not found | Check block name at https://shadcnblocks.com |
+| Issue                     | Resolution                                                      |
+| ------------------------- | --------------------------------------------------------------- |
+| Auth error on install     | Verify `SHADCNBLOCKS_API_KEY` is set in `.env` with a valid key |
+| Registry not found        | Check `registries` key exists in `components.json`              |
+| `components.json` missing | Run `npx shadcn@latest init`                                    |
+| 1Password access          | Run `op signin`; verify vault with `op vault list`              |
+| Block not found           | Check block name at https://shadcnblocks.com                    |
 
 ## Reference Files
 

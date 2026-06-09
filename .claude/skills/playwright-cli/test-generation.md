@@ -64,31 +64,31 @@ playwright-cli click e3
 Collect the generated code and wrap it in a Playwright test:
 
 ```typescript
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('user can log in', async ({ page }) => {
-  await page.goto('https://example.com/login');
-  await page.getByRole('textbox', { name: 'Email' }).fill('user@example.com');
-  await page.getByRole('textbox', { name: 'Password' }).fill('password123');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+test("user can log in", async ({ page }) => {
+  await page.goto("https://example.com/login");
+  await page.getByRole("textbox", { name: "Email" }).fill("user@example.com");
+  await page.getByRole("textbox", { name: "Password" }).fill("password123");
+  await page.getByRole("button", { name: "Sign In" }).click();
 
   // Add assertions (not generated — you add these)
   await expect(page).toHaveURL(/.*dashboard/);
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
 });
 ```
 
 ```javascript
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require("@playwright/test");
 
-test('user can log in', async ({ page }) => {
-  await page.goto('https://example.com/login');
-  await page.getByRole('textbox', { name: 'Email' }).fill('user@example.com');
-  await page.getByRole('textbox', { name: 'Password' }).fill('password123');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+test("user can log in", async ({ page }) => {
+  await page.goto("https://example.com/login");
+  await page.getByRole("textbox", { name: "Email" }).fill("user@example.com");
+  await page.getByRole("textbox", { name: "Password" }).fill("password123");
+  await page.getByRole("button", { name: "Sign In" }).click();
 
   await expect(page).toHaveURL(/.*dashboard/);
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
 });
 ```
 
@@ -96,13 +96,13 @@ test('user can log in', async ({ page }) => {
 
 The generated code uses Playwright's recommended locator hierarchy:
 
-| Priority | Locator Type | Example | When used |
-|----------|-------------|---------|-----------|
-| 1 | Role-based | `getByRole('button', { name: 'Submit' })` | Elements with ARIA roles |
-| 2 | Label-based | `getByLabel('Email')` | Form inputs with labels |
-| 3 | Placeholder | `getByPlaceholder('Search...')` | Inputs with placeholder text |
-| 4 | Text-based | `getByText('Welcome back')` | Static text content |
-| 5 | Test ID | `getByTestId('submit-btn')` | Elements with `data-testid` |
+| Priority | Locator Type | Example                                   | When used                    |
+| -------- | ------------ | ----------------------------------------- | ---------------------------- |
+| 1        | Role-based   | `getByRole('button', { name: 'Submit' })` | Elements with ARIA roles     |
+| 2        | Label-based  | `getByLabel('Email')`                     | Form inputs with labels      |
+| 3        | Placeholder  | `getByPlaceholder('Search...')`           | Inputs with placeholder text |
+| 4        | Text-based   | `getByText('Welcome back')`               | Static text content          |
+| 5        | Test ID      | `getByTestId('submit-btn')`               | Elements with `data-testid`  |
 
 These locators are **resilient to markup changes** — they mirror how users perceive the page rather than relying on CSS selectors or XPath.
 
@@ -189,60 +189,60 @@ Generated code captures **actions** but not **assertions**. Always add assertion
 ```typescript
 // URL changed after navigation
 await expect(page).toHaveURL(/.*dashboard/);
-await expect(page).toHaveURL('https://example.com/success');
+await expect(page).toHaveURL("https://example.com/success");
 
 // Element is visible
-await expect(page.getByRole('heading', { name: 'Welcome' })).toBeVisible();
-await expect(page.getByText('Order confirmed')).toBeVisible();
+await expect(page.getByRole("heading", { name: "Welcome" })).toBeVisible();
+await expect(page.getByText("Order confirmed")).toBeVisible();
 
 // Element contains text
-await expect(page.getByTestId('total')).toHaveText('$99.99');
-await expect(page.getByRole('alert')).toContainText('saved');
+await expect(page.getByTestId("total")).toHaveText("$99.99");
+await expect(page.getByRole("alert")).toContainText("saved");
 
 // Element has specific attribute
-await expect(page.getByRole('button', { name: 'Submit' })).toBeDisabled();
-await expect(page.getByRole('checkbox')).toBeChecked();
+await expect(page.getByRole("button", { name: "Submit" })).toBeDisabled();
+await expect(page.getByRole("checkbox")).toBeChecked();
 
 // Element count
-await expect(page.getByRole('listitem')).toHaveCount(5);
+await expect(page.getByRole("listitem")).toHaveCount(5);
 
 // Page title
 await expect(page).toHaveTitle(/Dashboard/);
 
 // Screenshot comparison
-await expect(page).toHaveScreenshot('checkout.png');
+await expect(page).toHaveScreenshot("checkout.png");
 ```
 
 ### Where to Place Assertions
 
 ```typescript
-test('complete checkout flow', async ({ page }) => {
-  await page.goto('https://shop.example.com/products');
+test("complete checkout flow", async ({ page }) => {
+  await page.goto("https://shop.example.com/products");
 
   // Action: Add item to cart
-  await page.getByRole('button', { name: 'Add to Cart' }).click();
+  await page.getByRole("button", { name: "Add to Cart" }).click();
 
   // Assertion: Cart badge updates
-  await expect(page.getByTestId('cart-count')).toHaveText('1');
+  await expect(page.getByTestId("cart-count")).toHaveText("1");
 
   // Action: Go to cart
-  await page.getByRole('link', { name: 'Cart' }).click();
+  await page.getByRole("link", { name: "Cart" }).click();
 
   // Assertion: Correct page
   await expect(page).toHaveURL(/.*cart/);
-  await expect(page.getByRole('heading', { name: 'Your Cart' })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your Cart" })).toBeVisible();
 
   // Action: Proceed to checkout
-  await page.getByRole('button', { name: 'Checkout' }).click();
+  await page.getByRole("button", { name: "Checkout" }).click();
 
   // Action: Fill shipping
-  await page.getByRole('textbox', { name: 'Full Name' }).fill('Jane Doe');
-  await page.getByRole('textbox', { name: 'Address' }).fill('123 Main St');
-  await page.getByRole('button', { name: 'Place Order' }).click();
+  await page.getByRole("textbox", { name: "Full Name" }).fill("Jane Doe");
+  await page.getByRole("textbox", { name: "Address" }).fill("123 Main St");
+  await page.getByRole("button", { name: "Place Order" }).click();
 
   // Assertion: Order confirmed
-  await expect(page.getByText('Order confirmed')).toBeVisible();
-  await expect(page.getByTestId('order-number')).toBeVisible();
+  await expect(page.getByText("Order confirmed")).toBeVisible();
+  await expect(page.getByTestId("order-number")).toBeVisible();
 });
 ```
 
@@ -264,11 +264,11 @@ The generated code already prefers role-based locators. If you see CSS selectors
 
 ```typescript
 // Generated (good — semantic, resilient)
-await page.getByRole('button', { name: 'Submit' }).click();
+await page.getByRole("button", { name: "Submit" }).click();
 
 // Avoid writing manually (fragile — breaks if CSS changes)
-await page.locator('#submit-btn').click();
-await page.locator('.btn.btn-primary').click();
+await page.locator("#submit-btn").click();
+await page.locator(".btn.btn-primary").click();
 ```
 
 ### 3. Keep Tests Focused
@@ -277,16 +277,16 @@ One test = one user behavior. Don't record an entire session into a single test:
 
 ```typescript
 // Good: Focused test
-test('user can add item to cart', async ({ page }) => {
+test("user can add item to cart", async ({ page }) => {
   // Just the add-to-cart flow
 });
 
-test('user can complete checkout', async ({ page }) => {
+test("user can complete checkout", async ({ page }) => {
   // Just the checkout flow (use auth state to skip login)
 });
 
 // Bad: Monolith test
-test('user journey', async ({ page }) => {
+test("user journey", async ({ page }) => {
   // Login + browse + add to cart + checkout + verify email...
 });
 ```
@@ -297,18 +297,18 @@ Replace hardcoded values from the recording with variables or test data:
 
 ```typescript
 // Instead of hardcoded values from recording
-test('registration', async ({ page }) => {
+test("registration", async ({ page }) => {
   const user = {
-    name: 'Jane Doe',
+    name: "Jane Doe",
     email: `test+${Date.now()}@example.com`,
-    password: 'SecurePass123!'
+    password: "SecurePass123!",
   };
 
-  await page.goto('/register');
-  await page.getByRole('textbox', { name: 'Name' }).fill(user.name);
-  await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
-  await page.getByRole('textbox', { name: 'Password' }).fill(user.password);
-  await page.getByRole('button', { name: 'Create Account' }).click();
+  await page.goto("/register");
+  await page.getByRole("textbox", { name: "Name" }).fill(user.name);
+  await page.getByRole("textbox", { name: "Email" }).fill(user.email);
+  await page.getByRole("textbox", { name: "Password" }).fill(user.password);
+  await page.getByRole("button", { name: "Create Account" }).click();
 
   await expect(page).toHaveURL(/.*welcome/);
 });
@@ -320,12 +320,12 @@ If a recorded action depends on async content loading, add explicit waits:
 
 ```typescript
 // Before clicking a dynamically loaded element
-await page.waitForSelector('.results-loaded');
-await page.getByRole('link', { name: 'First Result' }).click();
+await page.waitForSelector(".results-loaded");
+await page.getByRole("link", { name: "First Result" }).click();
 
 // Or use Playwright's auto-waiting (preferred)
-await expect(page.getByRole('link', { name: 'First Result' })).toBeVisible();
-await page.getByRole('link', { name: 'First Result' }).click();
+await expect(page.getByRole("link", { name: "First Result" })).toBeVisible();
+await page.getByRole("link", { name: "First Result" }).click();
 ```
 
 ## Tips

@@ -32,14 +32,14 @@ playwright-cli unroute
 
 playwright-cli uses glob patterns for URL matching:
 
-| Pattern | Matches | Example URLs |
-|---------|---------|-------------|
-| `**/api/users` | Exact path on any origin | `https://api.example.com/api/users` |
-| `**/api/*/details` | Wildcard in path segment | `https://api.example.com/api/123/details` |
-| `**/*.{png,jpg,jpeg}` | Multiple file extensions | `https://cdn.example.com/hero.png` |
-| `**/search?q=*` | Query parameters | `https://example.com/search?q=test` |
-| `https://api.example.com/**` | All requests to a specific origin | `https://api.example.com/v2/users` |
-| `**/*` | All requests | Everything |
+| Pattern                      | Matches                           | Example URLs                              |
+| ---------------------------- | --------------------------------- | ----------------------------------------- |
+| `**/api/users`               | Exact path on any origin          | `https://api.example.com/api/users`       |
+| `**/api/*/details`           | Wildcard in path segment          | `https://api.example.com/api/123/details` |
+| `**/*.{png,jpg,jpeg}`        | Multiple file extensions          | `https://cdn.example.com/hero.png`        |
+| `**/search?q=*`              | Query parameters                  | `https://example.com/search?q=test`       |
+| `https://api.example.com/**` | All requests to a specific origin | `https://api.example.com/v2/users`        |
+| `**/*`                       | All requests                      | Everything                                |
 
 ## CLI Route Commands
 
