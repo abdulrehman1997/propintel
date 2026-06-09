@@ -23,6 +23,20 @@ describe("GET /api/listings", () => {
     );
   });
 
+  it("forwards the new filters to findListings", async () => {
+    findListings.mockResolvedValue([]);
+    await GET(req("minBaths=2&propertyType=condo&status=for_sale&minYield=7&grade=B"));
+    expect(findListings).toHaveBeenCalledWith(
+      expect.objectContaining({
+        minBaths: "2",
+        propertyType: "condo",
+        status: "for_sale",
+        minYield: "7",
+        grade: "B",
+      }),
+    );
+  });
+
   it("degrades to an empty list when the DB throws", async () => {
     findListings.mockRejectedValue(new Error("ECONNREFUSED"));
     const res = await GET(req(""));

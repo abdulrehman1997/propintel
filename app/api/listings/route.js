@@ -10,6 +10,11 @@ export async function GET(request) {
     beds: searchParams.get("beds") || undefined,
     minPrice: searchParams.get("minPrice") || undefined,
     maxPrice: searchParams.get("maxPrice") || undefined,
+    minBaths: searchParams.get("minBaths") || undefined,
+    propertyType: searchParams.get("propertyType") || undefined,
+    status: searchParams.get("status") || undefined,
+    minYield: searchParams.get("minYield") || undefined,
+    grade: searchParams.get("grade") || undefined,
     page: searchParams.get("page") || undefined,
   };
   try {
