@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useListings } from "../lib/useListings";
 import { useCompare } from "../lib/compare-store";
 import { SearchFilters } from "../components/listings/SearchFilters";
+import { NLSearchBox } from "../components/listings/NLSearchBox";
 import { ListingCard } from "../components/listings/ListingCard";
 
 // Map the free-text q field to zip (5 digits) or city for the API.
@@ -47,6 +48,7 @@ export default function SearchPage() {
       <h1 className="font-display text-2xl font-medium text-ink-900">
         Find a property
       </h1>
+      <NLSearchBox onApply={setFilters} />
       <SearchFilters filters={filters} onChange={setFilters} />
       {loading ? (
         <p className="text-ink-400 text-sm">Loading&hellip;</p>
