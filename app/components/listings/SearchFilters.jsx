@@ -38,6 +38,57 @@ export function SearchFilters({ filters, onChange }) {
         onChange={set("beds")}
         aria-label="Minimum bedrooms"
       />
+      <input
+        className={inputCls}
+        type="number"
+        placeholder="Baths"
+        value={filters.minBaths || ""}
+        onChange={set("minBaths")}
+        aria-label="Minimum bathrooms"
+      />
+      <select
+        className={inputCls}
+        value={filters.propertyType || ""}
+        onChange={set("propertyType")}
+        aria-label="Property type"
+      >
+        <option value="">Any type</option>
+        <option value="single_family">Single family</option>
+        <option value="condo">Condo</option>
+        <option value="townhouse">Townhouse</option>
+        <option value="multi_family">Multi-family</option>
+      </select>
+      <select
+        className={inputCls}
+        value={filters.status || ""}
+        onChange={set("status")}
+        aria-label="Listing status"
+      >
+        <option value="">For sale &amp; sold</option>
+        <option value="for_sale">For sale</option>
+        <option value="sold">Sold</option>
+      </select>
+      <input
+        className={inputCls}
+        type="number"
+        step="0.1"
+        placeholder="Min yield %"
+        value={filters.minYield || ""}
+        onChange={set("minYield")}
+        aria-label="Minimum gross yield percent"
+      />
+      <select
+        className={inputCls}
+        value={filters.grade || ""}
+        onChange={set("grade")}
+        aria-label="Screening grade"
+      >
+        <option value="">Any grade</option>
+        <option value="A">A — yield ≥ 10%</option>
+        <option value="B">B — 7–10%</option>
+        <option value="C">C — 4–7%</option>
+        <option value="D">D — &lt; 4%</option>
+      </select>
     </div>
   );
 }
