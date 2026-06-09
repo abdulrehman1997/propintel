@@ -6,11 +6,26 @@ import { SearchFilters } from "../components/listings/SearchFilters";
 import { ListingCard } from "../components/listings/ListingCard";
 
 // Map the free-text q field to zip (5 digits) or city for the API.
-function toApiFilters({ q, minPrice, maxPrice, beds }) {
+function toApiFilters({
+  q,
+  minPrice,
+  maxPrice,
+  beds,
+  minBaths,
+  propertyType,
+  status,
+  minYield,
+  grade,
+}) {
   const f = {};
   if (minPrice) f.minPrice = minPrice;
   if (maxPrice) f.maxPrice = maxPrice;
   if (beds) f.beds = beds;
+  if (minBaths) f.minBaths = minBaths;
+  if (propertyType) f.propertyType = propertyType;
+  if (status) f.status = status;
+  if (minYield) f.minYield = minYield;
+  if (grade) f.grade = grade;
   const trimmed = (q || "").trim();
   if (/^\d{5}$/.test(trimmed)) {
     f.zip = trimmed;
