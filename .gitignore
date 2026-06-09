@@ -27,6 +27,9 @@ scratch-*
 # Superpowers brainstorm mockups
 .superpowers/
 
+# Listings dataset (download Kaggle CSV or sample here; not committed)
+updater/data/
+
 # Env
 .env
 .env*.local

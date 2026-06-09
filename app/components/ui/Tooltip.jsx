@@ -1,7 +1,7 @@
-'use client';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Info } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Info } from "lucide-react";
 
 export const Tooltip = ({ text }) => {
   const [show, setShow] = useState(false);

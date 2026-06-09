@@ -45,33 +45,36 @@ playwright-cli tracing-stop
 
 ### What Traces Capture
 
-| Category | Details |
-|----------|---------|
-| **Actions** | Every click, fill, hover, keyboard input, navigation — with timing |
-| **DOM Snapshots** | Full DOM state before and after each action |
-| **Screenshots** | Visual state at each step |
-| **Network** | All HTTP requests, responses, headers, bodies, timing |
-| **Console** | All `console.log`, `console.warn`, `console.error` messages |
-| **Timing** | Precise duration for each operation |
-| **Source** | Which command triggered each action |
+| Category          | Details                                                            |
+| ----------------- | ------------------------------------------------------------------ |
+| **Actions**       | Every click, fill, hover, keyboard input, navigation — with timing |
+| **DOM Snapshots** | Full DOM state before and after each action                        |
+| **Screenshots**   | Visual state at each step                                          |
+| **Network**       | All HTTP requests, responses, headers, bodies, timing              |
+| **Console**       | All `console.log`, `console.warn`, `console.error` messages        |
+| **Timing**        | Precise duration for each operation                                |
+| **Source**        | Which command triggered each action                                |
 
 ### Trace Output Files
 
 When tracing is active, Playwright creates a `traces/` directory:
 
 **`trace-{timestamp}.trace`** — Main trace file containing:
+
 - Action log with DOM snapshots
 - Screenshots at each step
 - Timing information
 - Console messages
 
 **`trace-{timestamp}.network`** — Network activity:
+
 - All HTTP requests and responses
 - Request/response headers and bodies
 - DNS, connect, TLS, TTFB, download timing
 - Resource sizes and failed requests
 
 **`resources/`** — Cached assets for trace replay:
+
 - Images, fonts, stylesheets, scripts
 - Response bodies for offline replay
 
@@ -88,6 +91,7 @@ npx playwright show-trace traces/trace-123456.trace
 ```
 
 The Trace Viewer shows:
+
 - **Timeline**: Step-by-step actions with screenshots
 - **DOM Snapshot**: Inspect elements at each step (like DevTools)
 - **Network**: Waterfall view of all requests
@@ -353,15 +357,15 @@ playwright-cli run-code "async page => {
 
 Choose the right capture method:
 
-| Feature | Trace | Video | Screenshot |
-|---------|-------|-------|------------|
-| **Format** | `.trace` file | `.webm` video | `.png` image |
-| **DOM inspection** | Yes | No | No |
-| **Network details** | Yes | No | No |
-| **Step-by-step replay** | Yes | Continuous | Single frame |
-| **Console logs** | Yes | No | No |
-| **File size** | Medium | Large | Small |
-| **Best for** | Debugging | Demos, documentation | Quick capture |
+| Feature                 | Trace         | Video                | Screenshot    |
+| ----------------------- | ------------- | -------------------- | ------------- |
+| **Format**              | `.trace` file | `.webm` video        | `.png` image  |
+| **DOM inspection**      | Yes           | No                   | No            |
+| **Network details**     | Yes           | No                   | No            |
+| **Step-by-step replay** | Yes           | Continuous           | Single frame  |
+| **Console logs**        | Yes           | No                   | No            |
+| **File size**           | Medium        | Large                | Small         |
+| **Best for**            | Debugging     | Demos, documentation | Quick capture |
 
 ### Decision Guide
 

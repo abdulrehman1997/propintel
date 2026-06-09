@@ -3,7 +3,10 @@
  * Each uses ON CONFLICT ... DO UPDATE so re-running is safe.
  */
 
-export async function upsertMarket(client, { zip, city, state, stateCode, countyFips, lat, lon }) {
+export async function upsertMarket(
+  client,
+  { zip, city, state, stateCode, countyFips, lat, lon },
+) {
   await client.query(
     `INSERT INTO markets (zip, city, state, state_code, county_fips, lat, lon, updated_at)
      VALUES ($1, $2, $3, $4, $5, $6, $7, now())
@@ -19,7 +22,10 @@ export async function upsertMarket(client, { zip, city, state, stateCode, county
   );
 }
 
-export async function upsertRentBenchmark(client, { zip, bedroom, fmr, source, period }) {
+export async function upsertRentBenchmark(
+  client,
+  { zip, bedroom, fmr, source, period },
+) {
   await client.query(
     `INSERT INTO rent_benchmarks (zip, bedroom, fmr, source, period, updated_at)
      VALUES ($1, $2, $3, $4, $5, now())
@@ -30,7 +36,10 @@ export async function upsertRentBenchmark(client, { zip, bedroom, fmr, source, p
   );
 }
 
-export async function upsertEconomicIndicator(client, { geo, metric, value, source, period }) {
+export async function upsertEconomicIndicator(
+  client,
+  { geo, metric, value, source, period },
+) {
   await client.query(
     `INSERT INTO economic_indicators (geo, metric, value, source, period, updated_at)
      VALUES ($1, $2, $3, $4, $5, now())
@@ -49,7 +58,11 @@ export async function startRefresh(client, source) {
   return rows[0].id;
 }
 
-export async function finishRefresh(client, id, { status, rows = null, error = null }) {
+export async function finishRefresh(
+  client,
+  id,
+  { status, rows = null, error = null },
+) {
   await client.query(
     `UPDATE refresh_log
      SET finished_at = now(), status = $2, rows_upserted = $3, error_msg = $4

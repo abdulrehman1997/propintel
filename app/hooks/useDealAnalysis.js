@@ -1,10 +1,10 @@
-'use client';
-import { useMemo } from 'react';
+"use client";
+import { useMemo } from "react";
 import {
   analyzeResidentialDeal,
   analyzeCommercialDeal,
   gradeFor,
-} from '../lib/engine-adapter';
+} from "../lib/engine-adapter";
 
 /**
  * Runs the modular pro-grade engine via the engine adapter:
@@ -19,12 +19,13 @@ import {
  */
 export function useDealAnalysis(mode, inputs, neighborhoodData) {
   return useMemo(() => {
-    const analyzed = mode === 'residential'
-      ? analyzeResidentialDeal(inputs)
-      : analyzeCommercialDeal(inputs);
+    const analyzed =
+      mode === "residential"
+        ? analyzeResidentialDeal(inputs)
+        : analyzeCommercialDeal(inputs);
 
     let results = analyzed;
-    if (mode === 'residential' && neighborhoodData?.neighborhoodScore != null) {
+    if (mode === "residential" && neighborhoodData?.neighborhoodScore != null) {
       const nbScore = neighborhoodData.neighborhoodScore;
       const blendedScore = analyzed.investmentScore * 0.7 + nbScore * 0.3;
       results = {

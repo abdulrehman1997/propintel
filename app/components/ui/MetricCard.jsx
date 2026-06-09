@@ -1,21 +1,21 @@
-'use client';
-import { cn } from '../../lib/cn';
-import { Tooltip } from './Tooltip';
+"use client";
+import { cn } from "../../lib/cn";
+import { Tooltip } from "./Tooltip";
 
 const parseNumeric = (value) => {
-  if (typeof value === 'number') return value;
-  const n = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
+  if (typeof value === "number") return value;
+  const n = parseFloat(String(value).replace(/[^0-9.-]/g, ""));
   return Number.isNaN(n) ? null : n;
 };
 
 // Desaturated semantic tones. Classes preserved for tests; theme remaps them.
 const valueColor = (value, benchmark) => {
-  if (!benchmark) return 'text-ink-800';
+  if (!benchmark) return "text-ink-800";
   const n = parseNumeric(value);
-  if (n === null) return 'text-ink-800';
-  if (n >= benchmark.green) return 'text-emerald-500';
-  if (n < benchmark.red) return 'text-rose-500';
-  return 'text-amber-500';
+  if (n === null) return "text-ink-800";
+  if (n >= benchmark.green) return "text-emerald-500";
+  if (n < benchmark.red) return "text-rose-500";
+  return "text-amber-500";
 };
 
 export const MetricCard = ({ label, value, benchmark, tooltip }) => {
@@ -26,7 +26,12 @@ export const MetricCard = ({ label, value, benchmark, tooltip }) => {
         {label}
         {tooltip && <Tooltip text={tooltip} />}
       </div>
-      <div className={cn('font-display text-2xl md:text-[1.7rem] font-medium tabular-nums leading-none', colorClass)}>
+      <div
+        className={cn(
+          "font-display text-2xl md:text-[1.7rem] font-medium tabular-nums leading-none",
+          colorClass,
+        )}
+      >
         {value}
       </div>
     </div>

@@ -1,6 +1,6 @@
-'use client';
-import { Children, cloneElement, isValidElement, useId } from 'react';
-import { Tooltip } from './Tooltip';
+"use client";
+import { Children, cloneElement, isValidElement, useId } from "react";
+import { Tooltip } from "./Tooltip";
 
 /**
  * Injects the given id onto the first real form control found in the subtree
@@ -9,13 +9,13 @@ import { Tooltip } from './Tooltip';
  */
 const withControlId = (children, id) => {
   let injected = false;
-  const tag = (el) => (typeof el.type === 'string' ? el.type : null);
+  const tag = (el) => (typeof el.type === "string" ? el.type : null);
 
   const walk = (nodes) =>
     Children.map(nodes, (child) => {
       if (injected || !isValidElement(child)) return child;
       const t = tag(child);
-      if (t === 'input' || t === 'select' || t === 'textarea') {
+      if (t === "input" || t === "select" || t === "textarea") {
         injected = true;
         return child.props.id ? child : cloneElement(child, { id });
       }

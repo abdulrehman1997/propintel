@@ -9,6 +9,7 @@
 Expand the existing single-property residential analyzer into a professional-grade Real Estate Investment Analyzer covering **both residential and commercial** properties, backed by a **real local data platform** (Postgres in Docker fed by a scheduled updater), with **side-by-side comparison** and **real charting**.
 
 Analysis methodology is grounded in how professional/institutional investors actually underwrite deals. See:
+
 - `docs/underwriting-methodology-spec.md` (residential)
 - `docs/cre-underwriting-spec.md` (commercial)
 
@@ -32,7 +33,9 @@ Analysis methodology is grounded in how professional/institutional investors act
 ## 4. Architecture — Three Subsystems
 
 ### 4.1 Analysis Engine (`lib/`)
+
 Refactor the monolith into focused modules:
+
 - `lib/finance.js` — shared primitives: amortization, mortgage constant K, IRR (numerical), NPV, DSCR, debt yield, max-loan = `MIN(LTV×value, NOI/minDebtYield, NOI/(minDSCR×K))` returning the **binding constraint label**, equity multiple, terminal value.
 - `lib/residential.js` — residential underwriting (existing logic moved + extended: user-driven appreciation, stress tests, IRR, equity multiple).
 - `lib/commercial.js` — commercial: per-unit (multifamily 5+) and per-SF (retail/office/industrial); NNN / gross / modified-gross lease handling; OER; going-in & exit cap; loss-to-lease; T-12 / rent-roll inputs; debt sizing; levered/unlevered IRR.
@@ -42,6 +45,7 @@ Refactor the monolith into focused modules:
 All engine code is **pure functions**, client-side, fully unit-testable. Immutable — return new result objects, never mutate inputs.
 
 ### 4.2 Data Platform (`docker/` + `updater/`)
+
 - `docker-compose.yml` — Postgres 16 container, named volume, healthcheck.
 - Schema (`updater/schema.sql`):
   - `markets` (zip/city/state, geo, last_refreshed)
@@ -55,6 +59,7 @@ All engine code is **pure functions**, client-side, fully unit-testable. Immutab
 - `app/api/neighborhood/route.js` rewired: **read Postgres first**; live API only on miss; this eliminates the current 500-on-missing-keys failure because seeded data is always present.
 
 ### 4.3 Frontend (`app/`)
+
 - **Mode toggle:** Residential ↔ Commercial. Swaps input set and result cards. Shared layout shell.
 - **Side-by-side compare:** 2–4 properties; ranked table; winner highlight per metric; reuses engine.
 - **Charts (Recharts):** projection line chart (value/equity/cash flow over hold), sensitivity heatmap (cap × rate or vacancy), score-breakdown bar.
@@ -95,6 +100,7 @@ Auth, multi-user, hosting/deploy, paid data APIs, scraping, AI runtime features,
 ## 10. Decomposition → Specs
 
 Each subsystem gets its own implementation plan, built in order:
+
 1. Analysis Engine (refactor + commercial + scoring + tests)
 2. Data Platform (Docker + schema + updater + API rewire)
 3. Frontend (toggle + compare + charts + persistence)

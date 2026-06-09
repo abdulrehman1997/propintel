@@ -1,5 +1,5 @@
-'use client';
-import { motion } from 'framer-motion';
+"use client";
+import { motion } from "framer-motion";
 
 export const AppHeader = () => (
   <header className="w-full bg-forest-700 text-paper-50 relative overflow-hidden">
@@ -8,7 +8,7 @@ export const AppHeader = () => (
       className="absolute inset-0 pointer-events-none opacity-60"
       style={{
         background:
-          'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 28%, transparent 70%, rgba(0,0,0,0.18) 100%)',
+          "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 28%, transparent 70%, rgba(0,0,0,0.18) 100%)",
       }}
     />
     <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-12 md:py-16 relative z-10">

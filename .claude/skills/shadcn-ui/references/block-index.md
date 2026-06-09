@@ -17,82 +17,82 @@ For the full untagged catalog, see `block-catalog.md`.
 
 ```yaml
 layout:
-  - centered           # Content centered, single column flow
-  - split_left_media   # 2-col: media left, text right
-  - split_right_media  # 2-col: text left, media right
-  - grid_cards         # 3-4 column card grid
-  - grid_icons         # Icon-driven grid (no large images)
-  - bento              # Asymmetric/mixed-size grid
-  - alternating        # Rows alternate text/media sides
-  - stacked            # Vertically stacked sections
-  - full_bleed         # Full-width background image/media
-  - comparison_table   # Side-by-side comparison layout
-  - sidebar            # Content with sidebar
-  - multi_column       # 4+ columns of content
-  - carousel           # Horizontally scrollable
-  - timeline           # Sequential/chronological layout
-  - masonry            # Pinterest-style varied heights
+  - centered # Content centered, single column flow
+  - split_left_media # 2-col: media left, text right
+  - split_right_media # 2-col: text left, media right
+  - grid_cards # 3-4 column card grid
+  - grid_icons # Icon-driven grid (no large images)
+  - bento # Asymmetric/mixed-size grid
+  - alternating # Rows alternate text/media sides
+  - stacked # Vertically stacked sections
+  - full_bleed # Full-width background image/media
+  - comparison_table # Side-by-side comparison layout
+  - sidebar # Content with sidebar
+  - multi_column # 4+ columns of content
+  - carousel # Horizontally scrollable
+  - timeline # Sequential/chronological layout
+  - masonry # Pinterest-style varied heights
 
 content_density:
-  - minimal            # Few elements, lots of whitespace
-  - standard           # Balanced content and space
-  - rich               # Dense with many elements/details
+  - minimal # Few elements, lots of whitespace
+  - standard # Balanced content and space
+  - rich # Dense with many elements/details
 
 tone:
-  - minimal            # Clean, simple, lots of whitespace
-  - modern             # Contemporary, sharp, current trends
-  - bold               # High contrast, large type, dramatic
-  - playful            # Rounded, colorful, friendly
-  - enterprise         # Professional, structured, conservative
-  - elegant            # Refined, subtle, sophisticated
+  - minimal # Clean, simple, lots of whitespace
+  - modern # Contemporary, sharp, current trends
+  - bold # High contrast, large type, dramatic
+  - playful # Rounded, colorful, friendly
+  - enterprise # Professional, structured, conservative
+  - elegant # Refined, subtle, sophisticated
 
 goal:
-  - awareness          # Brand/product introduction
-  - explain            # Describe features/benefits
-  - trust              # Social proof, credibility
-  - convert            # Drive specific action (signup, purchase)
-  - capture_leads      # Collect email/contact info
-  - compare            # Help users evaluate options
-  - navigate           # Wayfinding and site structure
-  - support            # Help/FAQ/contact
+  - awareness # Brand/product introduction
+  - explain # Describe features/benefits
+  - trust # Social proof, credibility
+  - convert # Drive specific action (signup, purchase)
+  - capture_leads # Collect email/contact info
+  - compare # Help users evaluate options
+  - navigate # Wayfinding and site structure
+  - support # Help/FAQ/contact
 
 cta_pattern:
-  - none               # No call-to-action
-  - single_primary     # One main button
-  - primary_secondary  # Main + secondary button
-  - form_capture       # Email/contact form
-  - multi_action       # Multiple distinct actions
-  - link_list          # Multiple text links
+  - none # No call-to-action
+  - single_primary # One main button
+  - primary_secondary # Main + secondary button
+  - form_capture # Email/contact form
+  - multi_action # Multiple distinct actions
+  - link_list # Multiple text links
 
 media:
-  - none               # No images/media
-  - screenshot         # Product/app screenshot
-  - illustration       # Custom illustration or graphic
-  - photo              # Photography
-  - video              # Video embed or background
-  - icons              # Icon-driven (no large media)
-  - logos              # Brand/partner logos
-  - avatars            # People photos/avatars
-  - chart              # Data visualization
+  - none # No images/media
+  - screenshot # Product/app screenshot
+  - illustration # Custom illustration or graphic
+  - photo # Photography
+  - video # Video embed or background
+  - icons # Icon-driven (no large media)
+  - logos # Brand/partner logos
+  - avatars # People photos/avatars
+  - chart # Data visualization
 
 interaction:
-  - static             # No interactive elements
-  - accordion          # Expandable/collapsible sections
-  - tabs               # Tabbed content switching
-  - carousel           # Horizontally scrollable
-  - toggle             # On/off or monthly/annual switch
-  - hover              # Hover-reveal effects
-  - filters            # Filterable content
+  - static # No interactive elements
+  - accordion # Expandable/collapsible sections
+  - tabs # Tabbed content switching
+  - carousel # Horizontally scrollable
+  - toggle # On/off or monthly/annual switch
+  - hover # Hover-reveal effects
+  - filters # Filterable content
 
 items_count:
-  - few                # 1-3 items
-  - moderate           # 4-6 items
-  - many               # 7+ items
+  - few # 1-3 items
+  - moderate # 4-6 items
+  - many # 7+ items
 
 complexity:
-  - low                # Simple markup, quick to customize
-  - medium             # Moderate markup, some configuration
-  - high               # Complex markup, significant setup
+  - low # Simple markup, quick to customize
+  - medium # Moderate markup, some configuration
+  - high # Complex markup, significant setup
 ```
 
 ---
@@ -103,16 +103,20 @@ These are the 1-2 questions Claude asks when the user's request is ambiguous wit
 
 ```yaml
 selection_prompts:
-
   hero:
     question: "What style of hero section fits your page?"
     options:
       - label: "Centered headline with CTA buttons"
         description: "Clean, focused — great for SaaS and product launches"
-        tags: { layout: [centered], cta_pattern: [single_primary, primary_secondary] }
+        tags:
+          {
+            layout: [centered],
+            cta_pattern: [single_primary, primary_secondary],
+          }
       - label: "Split layout with product screenshot"
         description: "Show your product alongside the pitch — ideal for app landing pages"
-        tags: { layout: [split_left_media, split_right_media], media: [screenshot] }
+        tags:
+          { layout: [split_left_media, split_right_media], media: [screenshot] }
       - label: "Hero with email/lead capture form"
         description: "Convert visitors immediately — best for waitlists, newsletters, early access"
         tags: { cta_pattern: [form_capture] }
@@ -125,16 +129,25 @@ selection_prompts:
     options:
       - label: "Card grid (3-4 columns with icons)"
         description: "Classic feature grid — each feature gets its own card with icon and description"
-        tags: { layout: [grid_cards, grid_icons], items_count: [moderate, many] }
+        tags:
+          { layout: [grid_cards, grid_icons], items_count: [moderate, many] }
       - label: "Alternating image + text rows"
         description: "Deep-dive into each feature with large visuals — great for product tours"
-        tags: { layout: [alternating, split_left_media, split_right_media], media: [screenshot, illustration] }
+        tags:
+          {
+            layout: [alternating, split_left_media, split_right_media],
+            media: [screenshot, illustration],
+          }
       - label: "Bento / asymmetric grid"
         description: "Modern, editorial layout with mixed-size cards — visually distinctive"
         tags: { layout: [bento], tone: [modern, bold] }
       - label: "Simple icon list or checklist"
         description: "Compact, scannable — works well for benefit lists and comparisons"
-        tags: { layout: [grid_icons, stacked], content_density: [minimal, standard] }
+        tags:
+          {
+            layout: [grid_icons, stacked],
+            content_density: [minimal, standard],
+          }
 
   pricing:
     question: "What pricing layout works best?"
@@ -170,7 +183,11 @@ selection_prompts:
     options:
       - label: "Simple CTA with headline + button"
         description: "Clean, focused call to action — drives one clear next step"
-        tags: { cta_pattern: [single_primary, primary_secondary], content_density: [minimal] }
+        tags:
+          {
+            cta_pattern: [single_primary, primary_secondary],
+            content_density: [minimal],
+          }
       - label: "CTA with email capture form"
         description: "Collect leads inline — great for newsletters, waitlists"
         tags: { cta_pattern: [form_capture] }
@@ -222,7 +239,11 @@ selection_prompts:
     options:
       - label: "Contact form with info sidebar"
         description: "Form + address/phone/email displayed alongside"
-        tags: { layout: [split_left_media, split_right_media], cta_pattern: [form_capture] }
+        tags:
+          {
+            layout: [split_left_media, split_right_media],
+            cta_pattern: [form_capture],
+          }
       - label: "Contact form only (centered)"
         description: "Clean, focused form — no distractions"
         tags: { layout: [centered], cta_pattern: [form_capture] }
@@ -241,7 +262,11 @@ selection_prompts:
         tags: { layout: [grid_icons], content_density: [standard] }
       - label: "Stats integrated with content"
         description: "Numbers woven into a narrative section — more editorial"
-        tags: { layout: [split_left_media, split_right_media], content_density: [rich] }
+        tags:
+          {
+            layout: [split_left_media, split_right_media],
+            content_density: [rich],
+          }
 ```
 
 ---
@@ -1133,6 +1158,7 @@ stats_blocks:
 ## Fallback Behavior
 
 When a section is not covered in this index (e.g., `blog`, `gallery`, `sidebar`):
+
 1. Recommend the default picks from `block-catalog.md`
 2. Ask the user about layout preference if multiple styles exist
 3. Note that the full catalog has more options to browse at https://shadcnblocks.com/explorer/blocks
@@ -1140,6 +1166,7 @@ When a section is not covered in this index (e.g., `blog`, `gallery`, `sidebar`)
 ## Expanding This Index
 
 To add new tagged entries:
+
 1. Visit the block on shadcnblocks.com/block/{id}
 2. Note the description, layout pattern, and interactive elements
 3. Tag using the vocabulary above

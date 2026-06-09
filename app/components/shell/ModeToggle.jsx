@@ -1,11 +1,11 @@
-'use client';
-import { motion } from 'framer-motion';
-import { Home, Building2 } from 'lucide-react';
-import { cn } from '../../lib/cn';
+"use client";
+import { motion } from "framer-motion";
+import { Home, Building2 } from "lucide-react";
+import { cn } from "../../lib/cn";
 
 const MODES = [
-  { id: 'residential', label: 'Residential', icon: Home },
-  { id: 'commercial', label: 'Commercial', icon: Building2 },
+  { id: "residential", label: "Residential", icon: Home },
+  { id: "commercial", label: "Commercial", icon: Building2 },
 ];
 
 export const ModeToggle = ({ mode, onChange }) => (
@@ -23,14 +23,14 @@ export const ModeToggle = ({ mode, onChange }) => (
           aria-pressed={isActive}
           onClick={() => onChange(id)}
           className={cn(
-            'relative flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full transition-colors duration-200',
-            isActive ? 'text-paper-50' : 'text-ink-500 hover:text-ink-700',
+            "relative flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full transition-colors duration-200",
+            isActive ? "text-paper-50" : "text-ink-500 hover:text-ink-700",
           )}
         >
           {isActive && (
             <motion.span
               layoutId="mode-toggle-bg"
-              transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+              transition={{ type: "spring", stiffness: 380, damping: 34 }}
               className="absolute inset-0 bg-forest-700 rounded-full shadow-soft"
             />
           )}

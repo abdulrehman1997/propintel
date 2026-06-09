@@ -1,12 +1,21 @@
-'use client';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
-export const Card = ({ title, icon: Icon, children, defaultOpen = true, id }) => {
+export const Card = ({
+  title,
+  icon: Icon,
+  children,
+  defaultOpen = true,
+  id,
+}) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div id={id} className="card-shell p-1.5 transition-shadow duration-300 hover:shadow-soft-lg">
+    <div
+      id={id}
+      className="card-shell p-1.5 transition-shadow duration-300 hover:shadow-soft-lg"
+    >
       <div className="card-core overflow-hidden">
         <button
           type="button"
@@ -29,7 +38,7 @@ export const Card = ({ title, icon: Icon, children, defaultOpen = true, id }) =>
             <motion.div
               key="content"
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
+              animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
               className="overflow-hidden"

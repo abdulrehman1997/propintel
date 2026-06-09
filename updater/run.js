@@ -1,23 +1,23 @@
-import { pool } from './db.js';
-import { pullCensus } from './sources/census.js';
-import { pullHud } from './sources/hud.js';
-import { pullFred } from './sources/fred.js';
-import { pullBls } from './sources/bls.js';
-import { pullZillow } from './sources/zillow.js';
+import { pool } from "./db.js";
+import { pullCensus } from "./sources/census.js";
+import { pullHud } from "./sources/hud.js";
+import { pullFred } from "./sources/fred.js";
+import { pullBls } from "./sources/bls.js";
+import { pullZillow } from "./sources/zillow.js";
 
 function defaultTasks(zips) {
   return [
     {
-      source: 'CENSUS_ACS5',
+      source: "CENSUS_ACS5",
       run: async (c) => {
         let n = 0;
         for (const z of zips) n += await pullCensus(c, z);
         return n;
       },
     },
-    { source: 'FRED', run: (c) => pullFred(c) },
-    { source: 'BLS', run: (c) => pullBls(c) },
-    { source: 'ZILLOW_ZHVI', run: (c) => pullZillow(c, zips) },
+    { source: "FRED", run: (c) => pullFred(c) },
+    { source: "BLS", run: (c) => pullBls(c) },
+    { source: "ZILLOW_ZHVI", run: (c) => pullZillow(c, zips) },
     // HUD requires stateCode — skip in default run; callers add it explicitly
   ];
 }
@@ -35,9 +35,13 @@ export async function runAllSources({ client = pool, zips = [], tasks } = {}) {
   for (const t of list) {
     try {
       const rows = await t.run(client, zips);
-      summary.push({ source: t.source, status: 'success', rows });
+      summary.push({ source: t.source, status: "success", rows });
     } catch (err) {
-      summary.push({ source: t.source, status: 'error', error: String(err.message || err) });
+      summary.push({
+        source: t.source,
+        status: "error",
+        error: String(err.message || err),
+      });
     }
   }
   return summary;

@@ -62,8 +62,8 @@ body {
 }
 
 @layer base {
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -73,7 +73,7 @@ body {
   }
 
   .font-display {
-    font-feature-settings: 'ss01';
+    font-feature-settings: "ss01";
   }
 }
 
@@ -134,17 +134,17 @@ body {
 }
 
 /* ─── Refined range slider ────────────────────────────────────────────────── */
-input[type='range'] {
+input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
   background: transparent;
 }
 
-input[type='range']:focus {
+input[type="range"]:focus {
   outline: none;
 }
 
-input[type='range']::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 4px;
   cursor: pointer;
@@ -152,7 +152,7 @@ input[type='range']::-webkit-slider-runnable-track {
   border-radius: 2px;
 }
 
-input[type='range']::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   height: 18px;
   width: 18px;
   border-radius: 50%;
@@ -165,17 +165,17 @@ input[type='range']::-webkit-slider-thumb {
   transition: transform var(--duration-fast) var(--ease-luxe);
 }
 
-input[type='range']:active::-webkit-slider-thumb {
+input[type="range"]:active::-webkit-slider-thumb {
   transform: scale(1.12);
 }
 
-input[type='range']::-moz-range-track {
+input[type="range"]::-moz-range-track {
   height: 4px;
   background: var(--color-hairline);
   border-radius: 2px;
 }
 
-input[type='range']::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
   height: 18px;
   width: 18px;
   border-radius: 50%;

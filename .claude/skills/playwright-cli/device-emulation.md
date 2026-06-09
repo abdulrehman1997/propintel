@@ -87,6 +87,7 @@ For accurate device testing, you need more than just viewport — device scale f
 Create a config file for a specific device:
 
 **`iphone14.json`**
+
 ```json
 {
   "viewport": { "width": 390, "height": 844 },
@@ -102,6 +103,7 @@ playwright-cli open https://example.com --config=iphone14.json
 ```
 
 **`pixel7.json`**
+
 ```json
 {
   "viewport": { "width": 412, "height": 915 },
@@ -113,6 +115,7 @@ playwright-cli open https://example.com --config=iphone14.json
 ```
 
 **`ipad-pro.json`**
+
 ```json
 {
   "viewport": { "width": 834, "height": 1194 },
@@ -214,9 +217,10 @@ playwright-cli run-code "async page => {
 Set geolocation when opening the browser:
 
 **`geo-nyc.json`**
+
 ```json
 {
-  "geolocation": { "latitude": 40.7128, "longitude": -74.0060 },
+  "geolocation": { "latitude": 40.7128, "longitude": -74.006 },
   "permissions": ["geolocation"]
 }
 ```
@@ -232,6 +236,7 @@ Test internationalization by changing the browser's locale and timezone.
 ### Via Config File
 
 **`locale-de.json`**
+
 ```json
 {
   "locale": "de-DE",
@@ -240,6 +245,7 @@ Test internationalization by changing the browser's locale and timezone.
 ```
 
 **`locale-ja.json`**
+
 ```json
 {
   "locale": "ja-JP",
@@ -271,19 +277,19 @@ playwright-cli run-code "async page => {
 
 ### Common Locale + Timezone Combinations
 
-| Region | Locale | Timezone |
-|--------|--------|----------|
-| US East | `en-US` | `America/New_York` |
-| US West | `en-US` | `America/Los_Angeles` |
-| UK | `en-GB` | `Europe/London` |
-| Germany | `de-DE` | `Europe/Berlin` |
-| France | `fr-FR` | `Europe/Paris` |
-| Japan | `ja-JP` | `Asia/Tokyo` |
-| China | `zh-CN` | `Asia/Shanghai` |
-| India | `hi-IN` | `Asia/Kolkata` |
-| Brazil | `pt-BR` | `America/Sao_Paulo` |
-| Australia | `en-AU` | `Australia/Sydney` |
-| Arabia | `ar-SA` | `Asia/Riyadh` |
+| Region    | Locale  | Timezone              |
+| --------- | ------- | --------------------- |
+| US East   | `en-US` | `America/New_York`    |
+| US West   | `en-US` | `America/Los_Angeles` |
+| UK        | `en-GB` | `Europe/London`       |
+| Germany   | `de-DE` | `Europe/Berlin`       |
+| France    | `fr-FR` | `Europe/Paris`        |
+| Japan     | `ja-JP` | `Asia/Tokyo`          |
+| China     | `zh-CN` | `Asia/Shanghai`       |
+| India     | `hi-IN` | `Asia/Kolkata`        |
+| Brazil    | `pt-BR` | `America/Sao_Paulo`   |
+| Australia | `en-AU` | `Australia/Sydney`    |
+| Arabia    | `ar-SA` | `Asia/Riyadh`         |
 
 ## Color Scheme
 

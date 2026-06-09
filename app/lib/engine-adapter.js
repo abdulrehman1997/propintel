@@ -6,25 +6,35 @@
 // Percentages are returned in human units (e.g. 6.5 means 6.5%) so the existing
 // formatPercent helper renders them directly.
 
-import { analyzeResidential, projectResidential } from '../../lib/residential.js';
-import { analyzeCommercial, projectCommercial } from '../../lib/commercial.js';
-import { compositeScore, redFlagGates, stressTests } from '../../lib/scoring.js';
-import { analyzeBRRRR } from '../../lib/brrrr.js';
-import { residentialInputSchema, commercialInputSchema } from '../../lib/schemas.js';
+import {
+  analyzeResidential,
+  projectResidential,
+} from "../../lib/residential.js";
+import { analyzeCommercial, projectCommercial } from "../../lib/commercial.js";
+import {
+  compositeScore,
+  redFlagGates,
+  stressTests,
+} from "../../lib/scoring.js";
+import { analyzeBRRRR } from "../../lib/brrrr.js";
+import {
+  residentialInputSchema,
+  commercialInputSchema,
+} from "../../lib/schemas.js";
 
 const pct = (frac) => (frac == null ? null : frac * 100);
 const num = (v, d = 0) => {
-  const n = typeof v === 'number' ? v : parseFloat(v);
+  const n = typeof v === "number" ? v : parseFloat(v);
   return Number.isFinite(n) ? n : d;
 };
 
 // ── Letter grade helper (kept consistent with scoring.js thresholds) ──
 const gradeFor = (score) => {
-  if (score >= 80) return 'A';
-  if (score >= 65) return 'B';
-  if (score >= 50) return 'C';
-  if (score >= 35) return 'D';
-  return 'F';
+  if (score >= 80) return "A";
+  if (score >= 65) return "B";
+  if (score >= 50) return "C";
+  if (score >= 35) return "D";
+  return "F";
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -56,7 +66,8 @@ const toResidentialEngineInput = (inputs) => ({
   saleCostPct: num(inputs.saleCostPct, 6),
   // exitCapRate is optional; only thread when > 0 so the engine can fall back to
   // appreciated-value terminal pricing for plain SFR deals.
-  exitCapRate: num(inputs.exitCapRate) > 0 ? num(inputs.exitCapRate) : undefined,
+  exitCapRate:
+    num(inputs.exitCapRate) > 0 ? num(inputs.exitCapRate) : undefined,
 });
 
 export const analyzeResidentialDeal = (inputs) => {
@@ -77,7 +88,7 @@ export const analyzeResidentialDeal = (inputs) => {
     equityMultiple: proj.equityMultiple ?? 1,
     capRate: base.capRate,
     grm: base.grm,
-    marketGrade: 'B',
+    marketGrade: "B",
     breakEvenOccupancy: base.breakEvenOccupancy,
     debtYield: base.debtYield,
     ageFactor: 0.5,
@@ -95,7 +106,7 @@ export const analyzeResidentialDeal = (inputs) => {
   });
 
   return {
-    mode: 'residential',
+    mode: "residential",
     // headline / scoring
     investmentScore: scored.score,
     investmentGrade: scored.grade,
@@ -124,7 +135,10 @@ export const analyzeResidentialDeal = (inputs) => {
     irr: pct(proj.irr),
     equityMultiple: proj.equityMultiple,
     exitValue,
-    exitCapRate: inputs.exitCapRate != null && num(inputs.exitCapRate) > 0 ? num(inputs.exitCapRate) : null,
+    exitCapRate:
+      inputs.exitCapRate != null && num(inputs.exitCapRate) > 0
+        ? num(inputs.exitCapRate)
+        : null,
     // chart helpers (score breakdown bars expect *Score keys)
     cocScore: scored.components.cashFlow,
     capScore: scored.components.valuation,
@@ -160,12 +174,15 @@ const toCommercialEngineInput = (inputs) => {
     : [];
 
   return {
-    assetType: inputs.assetType || 'multifamily',
+    assetType: inputs.assetType || "multifamily",
     purchasePrice: num(inputs.purchasePrice),
     rentableSqft: num(inputs.rentableSqft),
     units,
-    leaseType: inputs.leaseType || 'gross',
-    recoveryRatio: num(inputs.recoveryRatio) > 1 ? num(inputs.recoveryRatio) / 100 : num(inputs.recoveryRatio),
+    leaseType: inputs.leaseType || "gross",
+    recoveryRatio:
+      num(inputs.recoveryRatio) > 1
+        ? num(inputs.recoveryRatio) / 100
+        : num(inputs.recoveryRatio),
     vacancyPct: num(inputs.vacancyPct),
     creditLossPct: num(inputs.creditLossPct),
     otherIncomeAnnual: num(inputs.otherIncomeAnnual),
@@ -201,7 +218,7 @@ export const analyzeCommercialDeal = (inputs) => {
     equityMultiple: proj.equityMultiple ?? 1,
     capRate: base.goingInCap,
     grm: 0, // CRE valued on cap rate, not GRM; grmPart clamps to a low score
-    marketGrade: 'B',
+    marketGrade: "B",
     breakEvenOccupancy: base.breakEvenOccupancy,
     debtYield: base.debtYield,
     ageFactor: 0.5,
@@ -219,7 +236,7 @@ export const analyzeCommercialDeal = (inputs) => {
   });
 
   return {
-    mode: 'commercial',
+    mode: "commercial",
     assetType: base.assetType,
     investmentScore: scored.score,
     investmentGrade: scored.grade,
@@ -268,7 +285,8 @@ export const analyzeCommercialDeal = (inputs) => {
     // simple value/equity projection for the projections chart
     projections: proj.leveredCashFlows.slice(1).map((cf, i) => ({
       year: i + 1,
-      propertyValue: base.value * Math.pow(1 + num(inputs.rentGrowthPct, 3) / 100, i),
+      propertyValue:
+        base.value * Math.pow(1 + num(inputs.rentGrowthPct, 3) / 100, i),
       equity: base.equity,
       annualCashFlow: cf,
     })),
@@ -376,18 +394,20 @@ const SCHEMAS = {
  */
 export const validateEngineInput = (mode, inputs) => {
   const schema = SCHEMAS[mode];
-  if (!schema) return { success: false, errors: { _: `Unknown mode: ${mode}` } };
+  if (!schema)
+    return { success: false, errors: { _: `Unknown mode: ${mode}` } };
 
-  const candidate = mode === 'residential'
-    ? toResidentialEngineInput(inputs)
-    : toCommercialEngineInput(inputs);
+  const candidate =
+    mode === "residential"
+      ? toResidentialEngineInput(inputs)
+      : toCommercialEngineInput(inputs);
 
   const result = schema.safeParse(candidate);
   if (result.success) return { success: true, errors: {} };
 
   const errors = {};
   for (const issue of result.error.issues) {
-    const key = issue.path[0] ?? '_';
+    const key = issue.path[0] ?? "_";
     if (!errors[key]) errors[key] = issue.message;
   }
   return { success: false, errors };

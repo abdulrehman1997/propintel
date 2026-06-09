@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 export const AppFooter = () => (
   <footer className="w-full mt-20 border-t border-paper-200 bg-paper-100">

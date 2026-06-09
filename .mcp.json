@@ -2,17 +2,12 @@
   "mcpServers": {
     "qmd": {
       "command": "qmd",
-      "args": [
-        "mcp"
-      ]
+      "args": ["mcp"]
     },
     "task-master-ai": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "task-master-ai@latest"
-      ],
+      "args": ["-y", "task-master-ai@latest"],
       "env": {
         "TASK_MASTER_TOOLS": "core"
       }
@@ -20,24 +15,16 @@
     "sequential-thinking": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     },
     "context7": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ]
+      "args": ["-y", "@upstash/context7-mcp@latest"]
     },
     "code-review-graph": {
       "command": "code-review-graph",
-      "args": [
-        "serve"
-      ],
+      "args": ["serve"],
       "type": "stdio"
     }
   }
