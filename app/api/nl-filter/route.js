@@ -4,6 +4,7 @@ import {
   NL_SYSTEM_PROMPT,
   NL_OLLAMA_FORMAT,
 } from "../../../lib/nl/filterSchema.js";
+import { applyDeterministic } from "../../../lib/nl/normalize.js";
 
 const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5:7b";
@@ -31,6 +32,7 @@ export async function POST(request) {
         model: OLLAMA_MODEL,
         stream: false,
         format: NL_OLLAMA_FORMAT,
+        options: { temperature: 0 },
         messages: [
           { role: "system", content: NL_SYSTEM_PROMPT },
           { role: "user", content: query.trim() },
@@ -40,7 +42,12 @@ export async function POST(request) {
     });
     if (!res.ok) return unavailable();
     const data = await res.json();
-    const parsed = NlFilterSchema.parse(JSON.parse(data.message.content));
+    // The model owns fuzzy fields (q, propertyType); a deterministic overlay
+    // owns the mechanical slots (price/beds/baths/status) and strips
+    // hallucinated grade/yield. Validate the merged result.
+    const raw = JSON.parse(data.message.content);
+    const merged = applyDeterministic(query.trim(), raw);
+    const parsed = NlFilterSchema.parse(merged);
     return NextResponse.json(parsed);
   } catch (err) {
     console.error("nl-filter error:", err);
